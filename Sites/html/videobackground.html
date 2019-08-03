@@ -1,0 +1,45 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Pop up at 10</title>
+    <script src='https://cdn.jwplayer.com/libraries/FhsF7aM5.js'></script>
+    <style>
+	    #popup {
+		    position: absolute;
+		    z-index: 1;
+		    width: 200px;
+		    height: 100px;
+		    top: 50%;
+		    left: 50%;
+		    visibility: hidden;
+	    }
+	    
+    </style>
+  </head>
+  <body>
+    <div id="player"></div>
+    <button id='popup'>HELLO WORLD!!!</button>
+    <script>
+      let p1 = jwplayer("player");
+      let popup = document.getElementById('popup')
+	  
+	  p1.setup({file: "https://cdn.jwplayer.com/manifests/Z5r5sOlq.m3u8", autostart: true})	
+
+	  p1.on('time', (data) =>{
+			if (Math.floor(data.currentTime) === 10) {
+				popup.style.visibility = 'visible';
+			}
+			if (Math.floor(data.currentTime) === 15) {
+				popup.style.visibility = 'hidden'
+			}
+		})
+		
+		popup.addEventListener('click', () =>{
+			window.location.href = "https://www.jwplayer.com/";
+		})
+			
+    </script>
+  </body>
+</html>

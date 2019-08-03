@@ -1,0 +1,36 @@
+<html>
+<head>
+  <script type="text/javascript" src="https://content.jwplatform.com/libraries/Fp2hXm3I.js"></script>
+</head>
+
+<body>
+    <div id="myDiv">This is answer to a credit question.</div>
+    
+    <script>
+    var player = jwplayer("myDiv")
+    player.setup({
+        "file": "https://s3.amazonaws.com/bob.jwplayer.com/~test/assets/EasyVideo.mp4",
+        "image": "https://s3.amazonaws.com/bob.jwplayer.com/~test/assets/EasyImage.jpg ",
+        "height": 360,
+        "width": 640,
+        "title": "This is a credit question-2",
+        "description": "I am feeling awesome!",
+        "advertising": {
+          "client": 'vast'
+        }
+    });
+    
+    var tag = "https://playertest.longtailvideo.com/vast-30s-ad.xml"
+
+    player.on('beforePlay',function() {
+      triggerAd();
+    });
+
+    function triggerAd() {
+  player.playAd(tag);
+};
+
+    </script>
+</body>
+</html>
+

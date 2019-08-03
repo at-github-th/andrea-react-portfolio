@@ -1,0 +1,48 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>CTA on Complete</title>
+    <script src='https://cdn.jwplayer.com/libraries/FhsF7aM5.js'></script>
+    <style>
+	    .popup {
+		    position: absolute;
+		    z-index: 1;
+		    width: 200px;
+		    height: 100px;
+		    right: 0;
+		    top: 0;
+	    }
+    </style>
+  </head>
+  <body>
+    <div id="player"></div>
+    <script>
+      let p1 = jwplayer("player");
+      let playerInstance = document.getElementById('player')
+	  
+	  p1.setup({file: "https://cdn.jwplayer.com/manifests/Z5r5sOlq.m3u8", autostart: true})	
+
+	  //event that fires when the video content has finished playing
+	  p1.on("complete", () => {
+		 	//creates a new element (to be our CTA)
+		  	let popup = document.createElement('button')
+		  	
+		  	popup.innerHTML = 'Example CTA'
+			popup.classList.add('popup');
+			
+			//adding event listener for click to redirect
+			popup.addEventListener('click', () =>{
+				window.location.href = "https://www.jwplayer.com/";
+			})
+
+			//appending the popup to our player
+			player.appendChild(popup)
+			
+		})
+		
+			
+    </script>
+  </body>
+</html>

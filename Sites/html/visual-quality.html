@@ -1,0 +1,26 @@
+<!doctype html>
+<html>
+<head>
+	<script type="text/javascript" src="https://cdn.jwplayer.com/libraries/PXCjHOIn.js"></script>
+</head>
+<br>
+<div id="player"></div><br>
+<div id="output"></div>
+<script>
+	jwplayer('player').setup({
+		file: 'https://cdn.jwplayer.com/manifests/wQ2WzcgF.m3u8',
+		defaultBandwidthEstimate: 100000
+	}).on('ready',function(r){
+		console.log(r);
+		document.getElementById('output').innerHTML += "Player setup time: "+r.setupTime + " ms<br>";
+	}).on('firstFrame',function(ff){
+		console.log(ff);
+		document.getElementById('output').innerHTML += "Video source: "+this.getPlaylistItem().file + "<br>";
+		document.getElementById('output').innerHTML += "Time to first frame: "+ff.loadTime + " ms<br>";
+	}).on('visualQuality',function(vq){
+		console.log(vq);
+		document.getElementById('output').innerHTML += "Current quality: "+vq.level.height + "p @ "+vq.level.bitrate+"<br>";
+
+	});
+</script>	
+</html>

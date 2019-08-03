@@ -1,0 +1,33 @@
+<html>
+<head>
+<script type="text/javascript" src="https://content.jwplatform.com/libraries/Fp2hXm3I.js"></script>
+<style>
+#title {
+    color:brown;
+    font-size: 16px;
+    margin: 10px 230px;
+}
+</style>
+</head>
+
+<body>
+<div id="player"></div>
+<div id="title"></div>
+
+<script>
+var player = jwplayer("player")
+
+player.setup({
+    "playlist": "https://cdn.jwplayer.com/v2/playlists/OqDDPT0p", 
+    "title": "display title",
+    "description": "use of on('playlistItem') to display title of each playlist item"
+});
+
+player.on('playlistItem', function(data) {
+document.getElementById("title").innerHTML = data.item.title;
+});
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,36 @@
+<html>
+<head>
+<script type="text/javascript" src="https://content.jwplatform.com/libraries/Fp2hXm3I.js"></script>
+<style type="text/css">
+downloadbutton {
+    background-size: 45%;
+    opacity: 1;
+}
+
+</style>
+</head>
+
+<body>
+<div id="player"></div>
+
+<script>
+var player = jwplayer("player")
+
+player.setup({
+    "playlist": "https://cdn.jwplayer.com/v2/media/8L4m9FJB", 
+});
+
+player.addButton(
+    "../images/downloadbutton.svg",
+    "Download Video",
+)
+
+function(){
+    window.location.href = player.getPlaylistItem()['file'];
+},
+"download"
+);
+</script>
+
+</body>
+</html>

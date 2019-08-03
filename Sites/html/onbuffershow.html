@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Test Page</title>
+    <script src="https://cdn.jwplayer.com/libraries/s7u8JNW0.js"></script>
+  </head>
+  <body>
+	  <div id="player"></div>
+	  <p id='buffer_show'></p>
+	  <button id='buffer'>Log Buffer</button>
+	  <script type="text/javascript">
+	  	let player = jwplayer('player')
+	  	let btn = document.getElementById('buffer')
+	  	let buffer = document.getElementById('buffer_show')
+	  	
+	  	player.setup ({
+              file : "https://cdn.jwplayer.com/manifests/AGvgJ6qZ.m3u8", width: "50%"
+              });
+		
+		player.on('ready', () => {
+			btn.addEventListener('click', () => {
+				buffer.innerHTML = "Buffer: " + player.getBuffer()
+			}) 
+		});
+		
+		</script> 
+	</body>
+</html>

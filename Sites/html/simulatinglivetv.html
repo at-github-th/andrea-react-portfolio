@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+    <head>
+
+    </head>
+    <body>
+        <script src="//content.jwplatform.com/libraries/QR3nCX0K.js"></script>
+        <div id="myElement"></div>
+
+        <script type="text/javascript">
+        var playerInstance = jwplayer("myElement");
+
+        playerInstance.setup({
+            "playlist": "//content.jwplatform.com/feeds/DrqpQIzP.rss"
+        });
+        
+        playerInstance.on('displayClick', function() {
+            playerInstance.pause();
+        });
+
+        playerInstance.on('ready', function() {
+            var seconds = new Date().getMinutes()*60 + new Date().getSeconds();
+            var playlist = playerInstance.getPlaylist();
+            var offset = 0;
+
+            for (var index=0; index < playlist.length; index++)
+        {
+            var duration = Math.round(playlist[index]['duration']);
+
+            if(offset + duration > seconds) {
+                playerInstance.playlistItem(index);
+                playerInstance.seek(seconds-offset);
+                break;
+            } else {
+                offset += duration;
+            }
+        }
+    });
+
+        </script>
+    </body>
+</html>

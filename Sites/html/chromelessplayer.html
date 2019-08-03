@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+        .btn {
+            cursor: pointer;
+        }
+        </style>
+    </head>>
+    <body>
+        <script src="//content.jwplatform.com/libraries/wr6i4gal.js"></script>
+        
+        <div id="player"></div>
+        <div class="player-options">
+            <a class="btn md blue" id="play">Play Video</a>
+            <a class="btn md red" id="pause">Pause Video</a>
+        </div>
+
+        <script type="text/javascript">
+
+        var player = jwplayer('player');
+
+        player.setup({
+            playlist: 'https://cdn.jwplayer.com/v2/media/yp34SRmf',
+            controls: 'false'
+        });
+
+        var playBtn = document.getElementById('play');
+        var pauseBtn = document.getElementById('pause');
+
+        playBtn.addEventListener('click', function() {
+            player.play(true);
+        });
+
+        pauseBtn.addEventListener('click', function() {
+            player.pause(true);
+        });
+
+        </script>
+    </body>
+</html>

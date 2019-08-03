@@ -1,0 +1,30 @@
+<html>
+<head>
+
+<script type="text/javascript" src="https://content.jwplatform.com/libraries/Fp2hXm3I.js"></script>
+
+</head>
+
+<body>
+
+<div id="player"></div>
+
+<script>
+
+var player = jwplayer("player")
+
+player.setup({
+    "playlist": "https://cdn.jwplayer.com/v2/playlists/OqDDPT0p", 
+    "title": "display title",
+    "description": "use of on('playlistItem') to display title of each playlist item"
+});
+
+/* window.load(function() { */
+player.on('firstFrame', function() {
+console.log("time to first frame: ", Date.now());
+});
+
+</script>
+
+</body>
+</html>

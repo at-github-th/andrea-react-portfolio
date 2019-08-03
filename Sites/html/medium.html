@@ -1,0 +1,38 @@
+<html>
+<head>
+  <script type="text/javascript" src="https://content.jwplatform.com/libraries/Fp2hXm3I.js"></script>
+    <style type="text/css">
+    #play {
+      cursor: pointer;
+      color: green;
+    }
+    #stop {
+      cursor: pointer;
+      color: red;
+    }
+    #pause {
+      cursor: pointer;
+      color: blue;
+    }
+  </style>
+</head>
+
+<body>
+    <div id="myDiv">This is answer to an medium question.</div>
+    <h4 id="play" onclick="jwplayer('myDiv').play();">Play</h4>
+    <h4 id="stop" onclick="jwplayer('myDiv').stop();">Stop</h4>
+    <h4 id="pause" onclick="jwplayer('myDiv').pause();">Pause</h4>
+    
+    <script>
+    var player = jwplayer("myDiv")
+    player.setup({
+        "image": "https://s3.amazonaws.com/bob.jwplayer.com/~test/assets/MediumImage.jpg", 
+        "file": "https://s3.amazonaws.com/bob.jwplayer.com/~test/assets/MediumVideo.mp4",
+        "height": 360,
+        "width": 640,
+        "title": "This is MediumVideo test",
+        "description": "I am loving it!"
+    });
+    </script>
+</body>
+</html>

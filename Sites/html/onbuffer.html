@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+   <head>
+        <script src="https://cdn.jwplayer.com/libraries/PXCjHOIn.js"></script>
+       <style>
+
+       </style>
+   </head>
+   <body>
+
+       <div id="player"></div>
+       <p id='buffer_show'></p>
+	   <button id='buffer'>Log Buffer</button>
+
+       <script>
+
+       var player = jwplayer('player');
+       let btn = document.getElementById('buffer');
+       let buffer = document.getElementById('buffer_show');
+
+       player.setup({
+       file: 'https://content.jwplatform.com/videos/lqDCdcgx-vKyQERDm.mp4',
+       image: "https://content.jwplatform.com/thumbs/lqDCdcgx-320.jpg"
+       })
+       
+       player.on('buffer', function(b){
+       console.log(b);
+       console.log(this.getState())
+       })
+
+       player.on('ready', () => {
+			btn.addEventListener('click', () => {
+				buffer.innerHTML = "Buffer: " + player.getBuffer()
+			}) 
+		});
+
+
+       </script>
+   </body>
+</html>

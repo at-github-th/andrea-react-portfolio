@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+        
+        </style>
+    </head>
+    <body>
+        <script src="https://cdn.jwplayer.com/libraries/PXCjHOIn.js"></script>
+        <div id="player"></div>
+        <script>
+        var player = jwplayer('player');
+        player.setup({
+            file: 'https://content.jwplatform.com/videos/wQ2WzcgF-cMtX9w3J.mp4',
+            image: 'https://content.jwplatform.com/thumbs/wQ2WzcgF-480.jpg',
+            width: 900,
+            height: 360,
+            advertising: {
+                adscheduleid: 'Az87bY12',
+                client: 'vast',
+                schedule: {
+                    firstMid: {
+                        offset: 10,
+                        tag: 'https://playertest.longtailvideo.com/vast-30s-ad.xml'
+                    }
+                }
+            }
+        });
+            
+        </script>
+    </body>
+</html>

@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+    <body>
+        <script src="//content.jwplatform.com/players/l76Ij09F-0P4vdmeO.js"></script>
+
+        <div class="player-options"></div>
+        <a class="btn red tertiary-sm" href="javascript:resizePlayer()">Resize the Player</a>
+            
+        <script type="text/javascript">
+        
+        var player = jwplayer();
+
+        function resizePlayer() {
+            if(player.getWidth() > 480) {
+            player.resize (480, 270);
+        } else {
+            player.resize (640, 360);
+        }
+     } 
+
+        </script>
+
+    </body>
+</html>

@@ -1,0 +1,62 @@
+<html>
+<head>
+<!-- This is my personal cloud-hosted player link, so it will stop working for you. Please put your cloud-hosted link below -->	
+<script src="https://content.jwplatform.com/libraries/r2cr6BE6.js"></script>
+<!-- This is my personal cloud-hosted player link, so it will stop working for you. Please put your cloud-hosted link above -->
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+ga('create', 'UA-50167543-1', 'auto');
+ga('send', 'pageview');
+
+</script>
+</head>
+<body>
+<div id=video></div>
+<script>
+jwplayer('video').setup({
+	playlist: [{
+		title: 'Tears of Steel',
+		file: 'http://content.jwplatform.com/manifests/HImdP4gc.m3u8'	
+	}],
+	advertising: {
+		client: 'googima',
+		tag: 'https://badpubads.g.doubleclick.net/gampad/ads?sz=640x480&iu=/124319096/external/single_ad_samples&ciu_szs=300x250&impl=s&gdfp_req=1&env=vp&output=vast&unviewed_position_start=1&cust_params=deployment%3Ddevsite%26sample_ct%3Dlinear&correlator='
+	},
+	image: 'bunny.jpg'
+}).on('ready',function(r){
+	/*
+		Using this event handler to send custom pings to my GA account, as documented at https://developers.google.com/analytics/devguides/collection/analyticsjs/events
+	*/
+	ga('send', 'event', 'JW GA Events', jwplayer().getPlaylistItem().title, 'Embed');
+}).on('firstFrame',function(ff){
+	ga('send', 'event', 'JW GA Events', jwplayer().getPlaylistItem().title, 'Play');
+}).on('pause',function(p){
+	ga('send', 'event', 'JW GA Events', jwplayer().getPlaylistItem().title, 'Pause');
+}).on('adImpression',function(ae){
+	ga('send', 'event', 'JW GA Events', document.URL, 'Ad Impression');
+}).on('adError',function(ae){
+	ga('send', 'event', 'JW GA Events', document.URL, ae.message);
+}).on('fullscreen',function(){
+	if (jwplayer().getFullscreen() == true) {
+		ga('send', 'event', 'JW GA Events', document.URL, 'Fullscreen: True');
+	}
+	if (jwplayer().getFullscreen() == false) {
+		ga('send', 'event', 'JW GA Events', document.URL, 'Fullscreen: False');
+	}
+}).on('mute',function(){
+	if (jwplayer().getMute() == true) {
+		ga('send', 'event', 'JW GA Events', document.URL, 'Mute: True');
+	} 
+	if (jwplayer().getMute() == false) {
+		ga('send', 'event', 'JW GA Events', document.URL, 'Mute: False');
+	} 
+})
+</script>
+<br><br>
+</body>
+</html>

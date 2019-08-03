@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <style>
+        .jw-flag-flash-blocked .jw-title-primary {
+            display: none;
+        }
+        .jw-flag-flash-blocked .jw-title {
+            background: transparent;
+        }
+        </style>
+    </head>
+    <body>
+    
+    <script src="//content.jwplatform.com/libraries/IDzF9Zmk.js"></script>
+    
+    <div id="player"></div>
+
+    <script type="text/javascript">
+    
+    var player = jwplayer('player');
+
+    // Trigger error on player setup
+    player.setup({
+    file: "//content.jwplatform.com//videos/not-a-real-video-file.mp4"
+    });
+
+    // Load custom video file on error
+    player.on('error', function() {
+        player.load({
+            file:"//content.jwplatform.com/videos/7RtXk3vl-52qL9xLP.mp4",
+            image:"//content.jwplatform.com/thumbs/7RtXk3vl-480.jpg"
+        });
+        player.play();
+    });
+
+    // Also load custom video file on buffer
+    player.on('buffer', function() {
+        theTimeOUt  = setTimeout(function() {
+            player.load({
+            file:"//content.jwplatform.com/videos/7RtXk3vl-52qL9xLP.mp4",
+            image:"//content.jwplatform.com/thumbs/7RtXk3vl-480.jpg"
+            });
+            player.play();
+        }, 5000);
+    });
+
+    player.on('play', function() {
+        clearTimeout(theTimeOut);
+    });
+
+    </script>
+
+    </body>
+</html>

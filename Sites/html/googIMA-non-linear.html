@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <head>
+     <script src="https://cdn.jwplayer.com/libraries/PXCjHOIn.js"></script>
+    </head>
+    <body>
+       
+        <div id="player"></div>
+        <script>
+        var player = jwplayer('player');
+        player.setup({
+            file: "https://content.jwplatform.com/videos/wQ2WzcgF-vKyQERDm.mp4",
+            image: "https://content.jwplatform.com/thumbs/wQ2WzcgF-320.jpg",
+            width: 640,
+            height: 360,
+            autostart: false,
+            displayPlaybackLabel: true,
+            primary: "html5",
+            advertising: {
+                client: 'googima',
+                tag: 'https://pubads.g.doubleclick.net/gampad/ads?sz=480x70&iu=/124319096/external/single_ad_samples&ciu_szs=300x250&impl=s&gdfp_req=1&env=vp&output=vast&unviewed_position_start=1&cust_params=deployment%3Ddevsite%26sample_ct%3Dnonlinear&correlator=',
+                vpaidmode: "insecure",
+                height: 250,
+                width: 300
+                }
+            });
+            
+        </script>
+    </body>
+</html>

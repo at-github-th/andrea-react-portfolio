@@ -1,0 +1,98 @@
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<script type="text/javascript" src="https://content.jwplatform.com/libraries/Fp2hXm3I.js"></script>
+<style>
+.div-player {
+    max-width: 100%;
+    height: auto;
+}
+
+div.listbar_item:hover {
+    background-color: bisque;
+    width: 640px;
+    height: 80px;
+    margin-bottom: 10px;
+}
+
+.listbar {
+    background-color: grey;
+    width: 640px;
+    height: 80px;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+.listbar_item {
+    background-color: grey;
+    width: 640px;
+    height: 80px;
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+.listbar_item_playing {
+    background-color: gold;
+    width: 640px;
+    height: 80px;
+    margin-bottom: 10px;
+}
+</style>
+</head>
+
+<body>
+<div id="player"></div>
+<div id="listbar">
+    <div class="listbar_item" id="video0" onclick="jwplayer().playlistItem(0);jwplayer().play(true);">
+    <img style="float:left; height: 80px; margin-right: 5px; width: 142px;" src="https://content.jwplatform.com/thumbs/wQ2WzcgF-320.jpg">
+    <b>Big Buck Bunny -- Trailer</b>
+    </div>
+    <div class="listbar_item" id="video1" onclick="jwplayer().playlistItem(1);jwplayer().play(true);">
+    <img style="float:left; height: 80px; margin-right: 5px; width: 142px;" src="https://content.jwplatform.com/thumbs/sxWjUZza-320.jpg">
+    <b>Generic Test Video</b>
+    </div>
+    <div class="listbar_item" id="video2" onclick="jwplayer().playlistItem(0);jwplayer().play(true);">
+    <img style="float:left; height: 80px; margin-right: 5px; width: 142px;" src="https://content.jwplatform.com/thumbs/wScnTbI1-320.jpg">
+    <b>JW Logo (Two hours)</b>
+    </div>
+    <div class="listbar_item" id="video3" onclick="jwplayer().playlistItem(1);jwplayer().play(true);">
+    <img style="float:left; height: 80px; margin-right: 5px; width: 142px;" src="https://content.jwplatform.com/thumbs/MX70HETI-320.jpg">
+    <b>Big Buck Bunny -- Full</b>
+    </div>
+    <div class="listbar_item" id="video4" onclick="jwplayer().playlistItem(1);jwplayer().play(true);">
+    <img style="float:left; height: 80px; margin-right: 5px; width: 142px;" src="https://content.jwplatform.com/thumbs/Q5aPJqLR-320.jpg">
+    <b>JW Insights 2018 Intro</b>
+    </div>
+</div>
+
+<script>
+var player = jwplayer("player")
+
+player.setup({
+    "playlist": "https://cdn.jwplayer.com/v2/playlists/OqDDPT0p", 
+    "width": 640,
+    "height": 360,
+    "title": "display title",
+    "description": "use of on('playlistItem') to display title of each playlist item"
+});
+
+player.on('playlistItem', function() {
+    var thisVideo = 'video'+jwplayer().getPlaylistIndex();
+		var listbarItems = document.getElementById('listbar').children;
+		for (i=0; i<listbarItems.length; i++) {
+            console.log(listbarItems[i].id);
+			console.log(thisVideo);
+			if (listbarItems[i].id == thisVideo) {
+                listbarItems[i].className = 'listbar_item_playing';
+                console.log('set '+listbarItems[i].id+' to listbar_item_playing');
+            } else {
+                listbarItems[i].className = 'listbar_item';
+                console.log('set '+listbarItems[i].id+' back to listbar_item');
+        }
+    }
+});
+
+</script>
+
+</body>
+</html>

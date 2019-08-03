@@ -1,0 +1,374 @@
+<html>
+<head>
+  <style>
+/*--------------------------------------------------------------
+Accessibility
+--------------------------------------------------------------*/
+/* Text meant only for screen readers */
+.screen-reader-text {
+	clip: rect(1px, 1px, 1px, 1px);
+	position: absolute !important;
+	height: 1px;
+	width: 1px;
+	overflow: hidden;
+}
+
+.screen-reader-text:hover,
+.screen-reader-text:active,
+.screen-reader-text:focus {
+	background-color: #f1f1f1;
+	border-radius: 3px;
+	box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.6);
+	clip: auto !important;
+	color: #21759b;
+	display: block;
+	font-size: 14px;
+	font-weight: bold;
+	height: auto;
+	left: 5px;
+	line-height: normal;
+	padding: 15px 23px 14px;
+	text-decoration: none;
+	top: 5px;
+	width: auto;
+	z-index: 100000; /* Above WP toolbar */
+}
+
+/*--------------------------------------------------------------
+Typography
+--------------------------------------------------------------*/
+
+body {
+  margin: 0;
+	font-family: 'Source Sans Pro', 'Helvetica', 'Arial', sans-serif;
+	font-size: 18px;
+	line-height: 1.5;
+}
+
+p {
+	margin-bottom: 1.5em;
+}
+
+b,
+strong {
+	font-weight: bold;
+}
+
+em,
+i {
+	font-style: italic;
+}
+
+figure {
+	margin: 0;
+	padding: 0;
+}
+
+
+/*--------------------------------------------------------------
+General styling
+--------------------------------------------------------------*/
+
+h1,
+h2,
+h3 {
+	text-align: center;
+	margin: 0;
+	padding: 1em 0;
+}
+
+p {
+	margin: 0;
+	padding: 1em 0;
+}
+
+img {
+	display: block;
+	border: 0;
+	width: 100%;
+	height: auto;
+}
+
+
+/* Promo section */
+
+.logo,
+.site-title {
+	text-align: center;
+}
+
+.logo {
+  margin-top: .3em;
+	font-size: 6em;
+}
+
+.site-title {
+	margin-top: -1em;
+	margin-bottom: 2em;
+}
+
+/* Splash section */
+
+.splash {
+	background: #FFF6E5;
+	padding-bottom: 2em;
+}
+
+.splash-content {
+	padding: 1.5em;
+}
+
+@media screen and (min-width: 600px) {
+	.splash-text {
+		columns: 2;
+		column-gap: 2em;
+	}
+
+	.splash-text p {
+		padding-top: 0;
+	}
+}
+
+/* Buckets section */
+
+.buckets {
+	padding: 2em 1em 1em;
+	background: #3E454C;
+}
+
+.buckets ul {
+	margin: 0;
+	padding: 0;
+}
+
+.buckets li {
+	margin-bottom: 1em;
+	background: white;
+	list-style-type: none;
+}
+
+.bucket {
+	padding: 1.5em;
+}
+
+/* More section */
+
+.more {
+	padding: 2em;
+}
+
+.more-content {
+	padding: 1.5em;
+}
+
+/* Twins section */
+
+.sidebar {
+	background: hsl(0, 0%, 90%);
+}
+
+.twin {
+	padding: 2em;
+	background: #2185C5;
+	color: white;
+}
+
+.twin:last-of-type {
+	background: #FF7F66;
+}
+
+.content-title {
+  padding: .5em;
+}
+
+/* Colophon section */
+.colophon {
+	padding: 2em;
+	background: hsl(0, 0%, 10%);
+	color: white;
+	text-align: center;
+}
+
+.colophon a {
+	color: white;
+}
+
+.colophon a:hover,
+.colophon a:focus {
+	border-bottom: 1px solid white;
+}
+
+
+/*--------------------------------------------------------------
+Use flex to create a three-bucket layout
+--------------------------------------------------------------*/
+
+@media screen and (min-width: 700px) {
+	@supports (display: flex) {
+
+		.buckets ul {
+			display: flex;
+			justify-content: space-around;
+		}
+
+		.buckets li {
+			width: 48%;
+		}
+
+	}
+}
+
+/*--------------------------------------------------------------
+Basic responsive layout for all browsers:
+--------------------------------------------------------------*/
+
+.site {
+	max-width: 50em;
+	margin: 0 auto;
+}
+
+/*--------------------------------------------------------------
+CSS Grid layout for modern browsers:
+--------------------------------------------------------------*/
+
+@supports (grid-area: auto) {
+
+	@media screen and (min-width: 50em) {
+
+		.site {
+			max-width: none;
+			display: grid;
+			grid-template-columns: 15em auto;
+		}
+
+		.masthead {
+			grid-column: 1/3;
+		}
+
+		.main-area {
+			grid-column: 2/3;
+		}
+
+		.sidebar {
+			grid-column: 1/2;
+			grid-row: 2/4;
+		}
+
+		.colophon {
+			grid-column: 1/3;
+		}
+
+	}
+
+	@media screen and (min-width: 65em) {
+
+		.site {
+			grid-template-columns: 15em auto 15em;
+		}
+
+		.masthead {
+			grid-column: 1/4;
+		}
+
+		.sidebar {
+			display: inherit;
+			grid-template-columns: inherit;
+			grid-column: 1/4;
+			grid-row: 2/3;
+		}
+
+		.twin:last-of-type {
+			grid-column: 3/4;
+		}
+
+		.main-area {
+			grid-row: 2;
+			z-index: 1;
+		}
+
+		.colophon {
+			grid-column: 1/4;
+		}
+	}
+
+}
+
+
+  </style>
+</head>
+
+<body>
+    <div class="site">
+        <a class="skip-link screen-reader-text" href="#content">Skip to content</a>
+      
+        <header class="masthead">
+          <div class="logo">GRID PILE</div>
+          <h2 class="site-title">Stacked CSS Grid Effect</h2>
+        </header><!-- .masthead -->
+      
+        <main id="content" class="main-area">
+          <figure class="feature">
+            <img src="https://source.unsplash.com/w3lQVmuK8fw/1200x600" alt="Fox.">
+          </figure>
+          <section class="splash">
+            <div class="splash-content">
+              <h2 class="content-title">Magical content restructuring with CSS Grid stacks</h2>
+              <div class="splash-text">
+                <p>This example demonstrates how to reposition content in a view by stacking multiple grids on top of one another. The goal of the example is to retain a logical markup structure while still allowing content to be split up and positioned on the grid. Case in point: From a HTML semantics standpoint, the main area should come before the sidebar area, and both should live on the same level without extra wrappers. This demo shows how stacking two grids allows the sidebar items to appear as if they are placed on the same grid as the main content while they are in reality placed in a separate grid positioned within and superimposed on top of the original grid.</p>
+                <p>A detailed breakdown of this demo explaining the approach and how everything fits together can be found on <a href="https://www.linkedin.com/pulse/grid-pile-stacking-css-grids-impossible-layouts-rand-hendriksen">LinkedIn Pulse</a>.</p>
+              </div><!-- .splash-text -->
+            </div><!-- .splash-content -->
+          </section><!-- .splash -->
+      
+          <section class="buckets">
+            <ul>
+              <li>
+                <img src="https://source.unsplash.com/KUfkX6gVwBU/600x400" alt="Fog over Oslo.">
+                <div class="bucket">
+                  <h3 class="bucket-title">Grid is great</h3>
+                  <p>CSS Grid is a two-dimensional layout tool. It is great for layout out content in a grid, and for laying out content in two dimensions.</p>
+                </div><!-- .bucket -->
+              </li>
+              <li>
+                <img src="https://source.unsplash.com/1jKjJjGgDG8/600x400" alt="Sunset over the Oslo fjord.">
+                <div class="bucket">
+                  <h3 class="bucket-title">Flex is great too</h3>
+                  <p>Grid is not always the right option for layuts. If for example you need to lay out a series of identical boxes like those you see here, Flex may be a better option.</p>
+                </div><!-- .bucket -->
+              </li>
+            </ul>
+          </section><!-- .buckets -->
+      
+          <section class="more">
+            <div class="more-content">
+              <h2 class="content-title">Subgrid could be nice here</h2>
+              <p>The solution provided here is limited by the lack of support for subgrids. If subgrids were available, the solution would be more refined. That said, the lack of subgrid was what brought me to this solution, and it has practical applications well outside of the current demo. So maybe not having subgrid has opened the door to other more interesting opportunities?<p>
+            </div><!-- .more-content -->
+          </section><!-- .more -->
+      
+        </main>
+      
+        <aside class="sidebar">
+          <div class="twin">
+            <h2 class="content-title">First Sidebar Item</h2>
+            <p>This is the first of two sidebar sections. It appears as the first of two items in the sidebar <code>aside</code> element which is located after the <code>main</code> element in the HTML source order. On narrow screens it visually appears after the <code>main</code> element. On medium screens it appears at the top of the left-hand sidebar. On wide screens it appears at the top of the left-hand sidebar.</p>
+          </div>
+          <div class="twin">
+            <h2 class="content-title">Second Sidebar Item</h2>
+            <p>This is the second of two sidebar sections. It appears as the second of two items in the sidebar <code>aside</code> element which is located after the <code>main</code> element in the HTML source order. On narrow screens it visually appears after the first sidebar item. On medium screens it appears as the second item of the left-hand sidebar. On wide screens it appears at the top of the right-hand sidebar.</p>
+            <p>This is the second of two sidebar sections. It appears as the second of two items in the sidebar <code>aside</code> element which is located after the <code>main</code> element in the HTML source order. On narrow screens it visually appears after the first sidebar item. On medium screens it appears as the second item of the left-hand sidebar. On wide screens it appears at the top of the right-hand sidebar.</p>
+            <p>This is the second of two sidebar sections. It appears as the second of two items in the sidebar <code>aside</code> element which is located after the <code>main</code> element in the HTML source order. On narrow screens it visually appears after the first sidebar item. On medium screens it appears as the second item of the left-hand sidebar. On wide screens it appears at the top of the right-hand sidebar.</p>
+            <p>This is the second of two sidebar sections. It appears as the second of two items in the sidebar <code>aside</code> element which is located after the <code>main</code> element in the HTML source order. On narrow screens it visually appears after the first sidebar item. On medium screens it appears as the second item of the left-hand sidebar. On wide screens it appears at the top of the right-hand sidebar.</p>
+            <p>This is the second of two sidebar sections. It appears as the second of two items in the sidebar <code>aside</code> element which is located after the <code>main</code> element in the HTML source order. On narrow screens it visually appears after the first sidebar item. On medium screens it appears as the second item of the left-hand sidebar. On wide screens it appears at the top of the right-hand sidebar.</p>
+            <p>This is the second of two sidebar sections. It appears as the second of two items in the sidebar <code>aside</code> element which is located after the <code>main</code> element in the HTML source order. On narrow screens it visually appears after the first sidebar item. On medium screens it appears as the second item of the left-hand sidebar. On wide screens it appears at the top of the right-hand sidebar.</p>
+          </div>
+        </aside><!-- .sidebar -->
+      
+        <footer class="colophon">
+          <aside>All photos: <a href="https://unsplash.com/@andozo" target="_blank" rel="nofollow">Andreas Rønningen</a>.</aside>
+          <aside>Content, layout, design: <a href="https://twitter.com/mor10" target="_blank" rel="nofollow">Morten Rand-Hendriksen</a>.</aside>
+        </footer>
+        
+      </div><!-- .site -->
+</body>
+</html>

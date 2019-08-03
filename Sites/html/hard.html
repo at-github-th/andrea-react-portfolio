@@ -1,0 +1,53 @@
+<html>
+<head>
+  <script type="text/javascript" src="https://content.jwplatform.com/libraries/Fp2hXm3I.js"></script>
+    <style type="text/css">
+    #play {
+      cursor: pointer;
+      color: green;
+    }
+    #stop {
+      cursor: pointer;
+      color: red;
+    }
+    #pause {
+      cursor: pointer;
+      color: blue;
+    }
+  </style>
+</head>
+
+<body>
+    <div id="myDiv">This is answer to an medium question.</div>
+    <h4 id="play" onclick="jwplayer('myDiv').play();">Play</h4>
+    <h4 id="stop" onclick="jwplayer('myDiv').stop();">Stop</h4>
+    <h4 id="pause" onclick="jwplayer('myDiv').pause();">Pause</h4>
+
+    <div id="imgDiv">
+      <img id="img1" src="https://s3.amazonaws.com/bob.jwplayer.com/~test/assets/HardImage1.jpg" />
+    </div>
+
+    <script>
+    var player = jwplayer("myDiv")
+    
+    player.setup({
+        "image": "https://s3.amazonaws.com/bob.jwplayer.com/~test/assets/MediumImage.jpg", 
+        "file": "https://s3.amazonaws.com/bob.jwplayer.com/~test/assets/MediumVideo.mp4",
+        "height": 360,
+        "width": 640,
+        "title": "This is HardVideo test",
+        "description": "I am still going on."
+    });
+    window.setInterval(function(){ // Set interval for checking
+      if (player.getState() == 'playing') {
+        if (Math.round(player.on('time').getCurrentTime()) == 5) {
+          player.pause()
+          document.getElementById("img1").src = "https://s3.amazonaws.com/bob.jwplayer.com/~test/assets/HardImage2.jpg"
+        }
+      }
+    }, 500);
+
+    </script>
+</body>
+</html>
+

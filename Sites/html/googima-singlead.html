@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+    <head>
+     <script src="https://cdn.jwplayer.com/libraries/PXCjHOIn.js"></script>
+    </head>
+    <body>
+       
+        <div id="player"></div>
+        <script>
+        var player = jwplayer('player');
+        player.setup({
+            file: 'https://vcdn.hixic.com/dash/content/aadhan/361055389/1559048325995_,24,48,72,108,0p.mp4/urlset/manifest.mpd',
+            image: 'https://vcdn.hixic.com/gallery/main/f_05292019170756.jpg"',
+            width: 640,
+            height: 360,
+            autostart: false,
+            displayPlaybackLabel: true,
+            primary: "html5",
+            advertising: {
+                client: 'googima',
+                tag: 'https://pubads.g.doubleclick.net/gampad/ads?sz=640x480&iu=/124319096/external/single_ad_samples&ciu_szs=300x250&impl=s&gdfp_req=1&env=vp&output=vast&unviewed_position_start=1&cust_params=deployment%3Ddevsite%26sample_ct%3Dskippablelinear&correlator=',
+                vpaidmode: "insecure",
+                companiondiv: {
+                id: "sample-companion-div",
+                height: 250,
+                width: 300
+                }
+            }
+        });
+            
+        </script>
+    </body>
+</html>

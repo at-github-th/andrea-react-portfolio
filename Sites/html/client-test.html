@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+    <head>
+     <script src="https://cdn.jwplayer.com/libraries/URmKMdTK.js"></script>
+    </head>
+    <body>
+       
+        <div id="player"></div>
+        <script>
+        var player = jwplayer('player');
+        player.setup({
+    "playlist": "https://cdn.jwplayer.com/v2/playlists/Q3enBIAd?related_media_id=r2qMTfZm",
+    "advertising": {
+    "admessage": "This video will resume in xx seconds",
+    "adscheduleid": "NlRuGQhO",
+    "autoplayadsmuted": true,
+    "client": "googima",
+    "cuetext": "Advertisement",
+    "preloadAds": false,
+    "rules": {
+      "startOnSeek": "pre",
+      "timeBetweenAds": 0
+    },
+    "schedule": [
+      {
+        "offset": "pre",
+        "tag": "https://pubads.g.doubleclick.net/gampad/ads?sz=480x70&iu=/124319096/external/single_ad_samples&ciu_szs=300x250&impl=s&gdfp_req=1&env=vp&output=vast&unviewed_position_start=1&cust_params=deployment%3Ddevsite%26sample_ct%3Dnonlinear&correlator=",
+        "type": "non-linear"
+      }
+    ],
+    "skipmessage": "Skip ad in xx seconds",
+    "vpaidcontrols": false,
+    "vpaidmode": "insecure"
+  },
+  "aspectratio": "16:9",
+  "autostart": "viewable",
+  "cast": {
+    "appid": "00000000"
+  },
+  "controls": true,
+  "displaydescription": true,
+  "displaytitle": true,
+  "flashplayer": "//ssl.p.jwpcdn.com/player/v/8.9.4/jwplayer.flash.swf",
+  "height": 360,
+  "mute": true,
+  "ph": 3,
+  "pid": "URmKMdTK",
+  "playbackRateControls": false,
+  "playlist": "//cdn.jwplayer.com/v2/media/SPR6b7r2?recommendations_playlist_id=Q3enBIAd",
+  "preload": "metadata",
+  "repeat": false,
+  "stagevideo": false,
+  "stretching": "uniform",
+  "width": "100%"
+  });  
+
+        </script>
+    </body>
+</html>

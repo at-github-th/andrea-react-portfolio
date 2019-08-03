@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script src="https://cdn.jwplayer.com/libraries/PcHzdBcQ.js"></script>
+</head>
+<body>
+  <div id="player"></div>
+<script>  
+
+var player = jwplayer('player');
+player.setup({
+ file: "https://content.jwplatform.com/videos/0LcpPIMF-JmX2aUKA.mp4",
+ height: 360,
+ width: 640,
+ advertising: {
+   client: "vast",
+   skippable: true,
+   skipoffset: "1",
+   skiptext: "Skip",
+   schedule: [
+     {
+       offset: "pre",
+       tag: "https://playertest.longtailvideo.com/vast-30s-ad.xml"
+     },
+     {
+       offset: "25%",
+       tag: "https://playertest.longtailvideo.com/vast-30s-ad.xml"
+     },
+     {
+       offset: "50%",
+       tag: "https://playertest.longtailvideo.com/vast-30s-ad.xml"
+     },
+     {
+       offset: "75%",
+       tag: "https://playertest.longtailvideo.com/vast-30s-ad.xml"
+     },
+     {
+       offset: "post",
+       tag: "https://playertest.longtailvideo.com/vast-30s-ad.xml"
+     }
+   ],
+   }
+ }); 
+</script>
+</body>
+</html>

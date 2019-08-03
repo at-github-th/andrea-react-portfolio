@@ -1,0 +1,79 @@
+<html>
+<head>
+<script src="https://content.jwplatform.com/libraries/Jq6HIbgz.js"></script>
+<style>
+.demo-container p {
+	text-align: left;
+	margin-bottom: 30px;
+	font-family: Georgia, serif;
+	font-size: 17px;
+	line-height: 25px;
+}
+
+.demo-container p span {
+	font-size: 42px;
+	font-weight: 600;
+	padding-right: 5px;
+}
+
+.demo-container p.intro::first-letter{
+	font-size: 300%;
+	padding-right: 5px;
+	vertical-align: baseline;
+}
+
+.demo-container .flex-wrap {
+	display: flex;
+}
+
+#widget-video-player-shelf-widget {
+	height: 200px;
+	background-color: #f4f5f7;
+	margin-bottom: 40px;
+}
+
+#ads-video-player {
+	min-width: 320px;
+	display: inline-block;
+	margin-left: 20px;
+}
+
+@media (max-width: 480px) {
+	#ads-video-player {
+		display: block;
+		margin: 0 0 20px 0;
+	}
+	.demo-container .flex-wrap {
+		display: block;
+	}
+
+}
+</style>
+</head>
+<body>
+
+<div id="widget-video-player"></div>
+<script src="https://content.jwplatform.com/libraries/bNXmgGng.js"></script>
+
+<div id="widget-video-player-shelf-widget"></div>
+
+<script>
+jwplayer('widget-video-player').setup({
+  playlist: "//content.jwplatform.com/v2/media/RDn7eg0o?recommendations_playlist_id=TV74h176",
+     width: "100%",
+     aspectratio: "16:9",
+     displaytitle: false,
+     displaydescription: false,
+     image: "",
+     related: {
+        autoplaytimer: 10,
+        displayMode: "shelfWidget",
+        onclick: "link",
+        oncomplete: "autoplay"
+       },
+     autostart: false,
+     stretching: "uniform"
+});
+</script>
+</body>
+</html>
