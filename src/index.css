@@ -110,3 +110,29 @@ html,body{ margin:0; }
 
 /* optional: full-bleed elements can opt out with .full-bleed */
 .full-bleed{ max-width:none !important; padding-left:0 !important; padding-right:0 !important; }
+
+.donut-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:14px}
+.donut .ring{filter:drop-shadow(0 0 6px rgba(77,247,222,.35));transition:transform .25s ease, filter .25s ease}
+.donut:hover .ring{filter:drop-shadow(0 0 10px rgba(77,247,222,.7));transform:scale(1.02)}
+@media (prefers-reduced-motion: reduce){
+  .donut .ring{transition:none}
+}
+
+/* --- Hero centering & container --- */
+#hero{display:grid;place-items:center;min-height:72vh}
+#hero > *{width:100%}
+#hero .content, #hero .inner, #hero h1, #hero p, #hero button{
+  margin-left:auto;margin-right:auto;text-align:center
+}
+/* Hero centering */
+#hero{display:grid;place-items:center;min-height:72vh}
+#hero>*{width:100%}
+#hero .content,#hero .inner,#hero h1,#hero p,#hero button{margin-left:auto;margin-right:auto;text-align:center}
+/* Hero centering */
+#hero{display:grid;place-items:center;min-height:72vh}
+#hero>*{width:100%}
+#hero .content,#hero .inner,#hero h1,#hero p,#hero button{margin-left:auto;margin-right:auto;text-align:center}
+/* hero center fix */
+#hero{display:grid;place-items:center;min-height:72vh}
+#hero>*{width:100%}
+#hero .btn{margin-left:auto;margin-right:auto}
