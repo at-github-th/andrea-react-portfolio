@@ -18,7 +18,9 @@ export default function App(){
 
   return (
     <div className="min-h-dvh">
-      <Hero />
+      <header className="section"><header className="section">
+  <header id="hero" className="section"><Hero /></header>
+</header></header>
 
       <main>
         <section id="profile" className="section">

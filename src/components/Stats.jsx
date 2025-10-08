@@ -1,38 +1,132 @@
+import React, { useState } from "react";
+import SunburstChart from "./SunburstChart.jsx";
+import Modal from "./Modal.jsx";
 
-import React, {useState} from 'react'
+const sunburstData = [
+  { name: "Management", value: 100, children: [
+    { name: "Client Management", value: 56 },
+    { name: "Product Management", value: 44 }
+  ]},
+  { name: "Solutions", value: 39, children: [
+    { name: "Integrations", value: 20 },
+    { name: "Presales", value: 19 }
+  ]},
+  { name: "Development", value: 24, children: [
+    { name: "Front End", value: 12 },
+    { name: "Back End", value: 12 }
+  ]},
+  { name: "Science", value: 16, children: [
+    { name: "Biomechanics", value: 8 },
+    { name: "Robotics", value: 8 }
+  ]}
+];
 
-const ITEMS = [
-  {k:'5+', v:'Years of Experience', detail:`Hands-on Solutions Engineering, Presales, and Product/Delivery collaboration across Media, AdTech, and SaaS.`},
-  {k:'25+', v:'Projects Completed', detail:`Proofs of Concept, middleware, dashboards, integration adapters, and demo apps shipped to unblock sales.`},
-  {k:'100+', v:'Clients/Portfolios', detail:`Enterprise and SMB engagements; tailored demos, success criteria mapping, and stakeholder alignment.`},
-  {k:'150+', v:'Meetings Done', detail:`Discovery, demos, playback, objection handling, commercial alignment, and handover ceremonies.`},
-]
+const METRICS = [
+  {
+    id: "exp",
+    value: "5+",
+    label: "Years of Experience",
+    bullets: [
+      "Customer-facing presales & integrations.",
+      "Full project lifecycle: discovery → delivery.",
+      "Mentoring, enablement, and solution design."
+    ]
+  },
+  {
+    id: "proj",
+    value: "25+",
+    label: "Projects Completed",
+    bullets: [
+      "PoCs & production rollouts across industries.",
+      "Fast MVPs with clean handoff docs & demos.",
+      "Strong bias for measurable outcomes."
+    ]
+  },
+  {
+    id: "clients",
+    value: "100+",
+    label: "Clients/Portfolios",
+    bullets: [
+      "SMB to enterprise—mixed complexity.",
+      "Stakeholder management & clear comms.",
+      "Repeat wins through reliability."
+    ]
+  },
+  {
+    id: "mtgs",
+    value: "150+",
+    label: "Meetings Done",
+    bullets: [
+      "Workshops, discovery, and solution reviews.",
+      "Translate tech ↔ business clearly.",
+      "Concise follow-ups and next steps."
+    ]
+  }
+];
+
+function Tile({ m, onOpen }) {
+  return (
+    <button
+      type="button"
+      onClick={() => onOpen(m.id)}
+      className="card p-4 text-center rounded-xl transition focus:outline-none focus:ring-2 focus:ring-teal-400/40"
+    >
+      <div className="text-3xl font-semibold text-teal-300">{m.value}</div>
+      <div className="opacity-70 text-xs mt-1">{m.label}</div>
+    </button>
+  );
+}
 
 export default function Stats(){
-  const [sel, setSel] = useState(null)
+  const [active, setActive] = useState(null);
+  const openMetric = METRICS.find(m => m.id === active);
+
+  const scrollToChart = () => {
+    const el = document.getElementById("summary-chart")
+           || document.querySelector("#summary svg, #summary canvas");
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
+    setActive(null);
+  };
+
   return (
-    <section className="section" id="summary">
-      <h2>SUMMARY</h2>
-      <div className="grid sm:grid-cols-2 md:grid-cols-4 gap-4">
-        {ITEMS.map((it)=>(
-          <button key={it.v} className="card p-6 text-center hover:shadow-glow transition" onClick={()=>setSel(it)}>
-            <div className="text-3xl md:text-4xl font-bold text-ink-glow">{it.k}</div>
-            <div className="mt-1 text-sm opacity-80 tracking-widest">{it.v}</div>
-          </button>
-        ))}
+    <div className="space-y-6">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+        {METRICS.map(m => <Tile key={m.id} m={m} onOpen={setActive} />)}
       </div>
 
-      {sel && (
-        <div className="fixed inset-0 bg-black/60 backdrop-blur-sm grid place-items-center z-50" onClick={()=>setSel(null)}>
-          <div className="card p-6 max-w-xl w-[92vw]" onClick={e=>e.stopPropagation()}>
-            <div className="flex items-center justify-between">
-              <h3 className="tracking-widest font-semibold">{sel.v}</h3>
-              <button className="btn" onClick={()=>setSel(null)}>Close</button>
+      {/* Central chart with an anchor for 'See chart' */}
+      <div id="summary-chart">
+        <SunburstChart
+          title="Stats"
+          subtitle="Click slices to drill; Reset to return"
+          data={sunburstData}
+        />
+      </div>
+
+      {/* Modal details */}
+      <Modal
+        open={!!active}
+        onClose={() => setActive(null)}
+        ariaLabel={openMetric ? `${openMetric.label} details` : "Metric details"}
+      >
+        {openMetric && (
+          <div className="space-y-3">
+            <div className="flex items-start justify-between gap-4">
+              <div className="text-2xl font-semibold text-teal-300">
+                {openMetric.value}
+                <span className="text-base opacity-70 ml-2">{openMetric.label}</span>
+              </div>
+              <div className="shrink-0 flex items-center gap-2">
+                <button className="btn" onClick={scrollToChart}>See chart</button>
+                <button className="btn" onClick={() => setActive(null)} aria-label="Close">Close</button>
+              </div>
             </div>
-            <p className="mt-4 opacity-90 leading-relaxed">{sel.detail}</p>
+            <ul className="mt-2 space-y-1 text-sm opacity-90">
+              {openMetric.bullets.map((b,i)=>(<li key={i} className="list-disc list-inside">{b}</li>))}
+            </ul>
           </div>
-        </div>
-      )}
-    </section>
-  )
+        )}
+      </Modal>
+    </div>
+  );
 }
