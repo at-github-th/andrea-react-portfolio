@@ -85,28 +85,7 @@ html,body,#root {
   background: rgba(22,30,55,0.45); backdrop-filter: blur(3px);
   font-weight: 600; letter-spacing: .06em;
 }
-/* layout fix v2 (symmetric gutters) */
-html,body,#root{overflow-x:hidden;scrollbar-gutter:stable both-edges}
-.section{max-width:1200px;margin-inline:auto;padding-inline:16px}
-@media (min-width:1024px){.section{max-width:1280px;padding-inline:24px}}
-@media (min-width:1536px){.section{max-width:1400px}}
-/* === FINAL CONTAINER LAYER (center + symmetric gutters) === */
-:root{ --content-max:1200px; }
-@media (min-width:1536px){ :root{ --content-max:1320px; } }
-
-/* kill any earlier experiments that used vw/min() by overriding strongly */
-#root, main, footer, header, section.section{
-  max-width:var(--content-max) !important;
-  width:100% !important;
-  margin-left:auto !important;
-  margin-right:auto !important;
-  padding-left:clamp(16px,4vw,28px) !important;
-  padding-right:clamp(16px,4vw,28px) !important;
-  box-sizing:border-box !important;
-}
-
-/* make sure the body isn’t adding a stray offset */
-html,body{ margin:0; }
-
-/* optional: full-bleed elements can opt out with .full-bleed */
-.full-bleed{ max-width:none !important; padding-left:0 !important; padding-right:0 !important; }
+/* layout polish */
+:root{--content-max:1200px}@media(min-width:1536px){:root{--content-max:1400px}}
+#root,main,section,.section{max-width:var(--content-max);margin-left:auto;margin-right:auto;padding-left:1rem;padding-right:1rem}
+.section h2,.section h3,.section .title{text-align:center}
