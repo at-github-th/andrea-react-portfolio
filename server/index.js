@@ -7,71 +7,63 @@ import nodemailer from "nodemailer";
 import { z } from "zod";
 
 const app = express();
-const PORT = 3001;
+app.use(helmet());
+app.use(cors());
+app.use(express.json({ limit: "200kb" }));
+app.use(rateLimit({ windowMs: 60_000, max: 30 }));
 
-app.use(helmet({ contentSecurityPolicy: false }));
-app.use(express.json());
-app.use(cors({
-  origin: process.env.FRONTEND_ORIGIN || "http://localhost:5173"
-}));
-
-const limiter = rateLimit({
-  windowMs: 60_000,
-  max: 10,
-});
-app.use("/api/", limiter);
-
-app.get("/api/health", (_req,res)=>res.json({ ok:true }));
+const {
+  SMTP_HOST, SMTP_PORT, SMTP_SECURE, SMTP_USER, SMTP_PASS,
+  MAIL_FROM, MAIL_TO, TURNSTILE_SECRET
+} = process.env;
 
 const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: Number(process.env.SMTP_PORT || 465),
-  secure: !!Number(process.env.SMTP_SECURE || 1),
-  auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
+  host: SMTP_HOST, port: Number(SMTP_PORT||0)||587, secure: SMTP_SECURE==="1",
+  auth: { user: SMTP_USER, pass: SMTP_PASS }
 });
 
 const schema = z.object({
-  name: z.string().min(1),
+  name: z.string().min(2),
   email: z.string().email(),
-  subject: z.string().min(1),
+  subject: z.string().min(2),
   message: z.string().min(3),
-  captchaToken: z.string().optional(),
+  captchaToken: z.string().optional()
 });
 
-app.post("/api/contact", async (req, res) => {
-  try{
-    const data = schema.parse(req.body);
+app.get("/api/health", (_req,res)=>res.json({ ok:true }));
 
-    if(process.env.TURNSTILE_SECRET){
+app.post("/api/contact", async (req, res) => {
+  try {
+    const { name, email, subject, message, captchaToken } = schema.parse(req.body);
+
+    if (TURNSTILE_SECRET) {
+      const body = new URLSearchParams({
+        secret: TURNSTILE_SECRET,
+        response: captchaToken || "",
+        remoteip: req.ip || ""
+      });
       const vf = await fetch("https://challenges.cloudflare.com/turnstile/v0/siteverify", {
         method: "POST",
-        headers: { "Content-Type":"application/x-www-form-urlencoded" },
-        body: new URLSearchParams({
-          secret: process.env.TURNSTILE_SECRET,
-          response: data.captchaToken || "",
-          remoteip: req.ip || ""
-        })
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body
       });
       const vd = await vf.json().catch(()=>({ success:false }));
-      if(!vd.success) return res.status(400).json({ ok:false, error:"CAPTCHA_FAILED" });
+      if (!vd.success) return res.status(400).json({ ok:false, error:"CAPTCHA_FAILED" });
     }
 
     await transporter.sendMail({
-      from: process.env.MAIL_FROM,
-      to: process.env.MAIL_TO,
-      replyTo: data.email,
-      subject: `[Portfolio] ${data.subject}`,
-      text: `From: ${data.name} <${data.email}>\n\n${data.message}`,
-      html: `<p><strong>From:</strong> ${data.name} &lt;${data.email}&gt;</p><p>${data.message.replace(/\n/g,"<br>")}</p>`
+      from: MAIL_FROM, to: MAIL_TO, replyTo: email,
+      subject: `[Portfolio] ${subject}`,
+      text: `From: ${name} <${email}>\n\n${message}`,
+      html: `<p><strong>From:</strong> ${name} &lt;${email}&gt;</p><p>${message.replace(/\n/g,"<br>")}</p>`
     });
 
     return res.json({ ok:true });
-  }catch(err){
+  } catch (err) {
     console.error(err);
     return res.status(400).json({ ok:false, error:"SEND_FAILED" });
   }
 });
 
-app.listen(PORT, () => {
-  console.log(`Server listening on ${PORT}`);
-});
+const port = process.env.PORT || 3001;
+app.listen(port, ()=>console.log(`Server listening on ${port}`));
