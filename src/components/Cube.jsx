@@ -1,56 +1,20 @@
-import React, { useState } from "react";
-
-const FACES = [
-  { id:"js",     label:"JavaScript", rot:[0,   0]   },
-  { id:"py",     label:"Python",     rot:[0, 180]   },
-  { id:"react",  label:"React",      rot:[0, -90]   },
-  { id:"node",   label:"Node",       rot:[0,  90]   },
-  { id:"java",   label:"Java",       rot:[90,  0]   },
-  { id:"swift",  label:"Swift",      rot:[-90, 0]   },
-];
-
-export default function Cube(){
-  const [active, setActive] = useState("js");
-  const [rx, ry] = FACES.find(f=>f.id===active)?.rot || [0,0];
-
-  return (
-    <div className="grid md:grid-cols-[420px_1fr] gap-6 items-center">
-      <div className="perspective h-[240px] md:h-[320px]">
-        <div className="cube" style={{ transform:`rotateX(${rx}deg) rotateY(${ry}deg)` }}>
-          <Face pos="front">JavaScript</Face>
-          <Face pos="back">Python</Face>
-          <Face pos="left">React</Face>
-          <Face pos="right">Node</Face>
-          <Face pos="top">Java</Face>
-          <Face pos="bottom">Swift</Face>
-        </div>
-      </div>
-      <div className="space-y-2">
-        <div className="text-sm opacity-70">Click to focus a face</div>
-        <div className="flex flex-wrap gap-2">
-          {FACES.map(f=>(
-            <button key={f.id}
-              className={`btn ${active===f.id?"border-teal-400/50":""}`}
-              onClick={()=>setActive(f.id)}
-            >
-              {f.label}
-            </button>
-          ))}
-        </div>
-      </div>
-    </div>
-  );
-}
-
-function Face({ pos, children }){
-  const base = "cube-face bg-white/5";
-  const style = {
-    front:  { transform:"translateZ(112px)" },
-    back:   { transform:"rotateY(180deg) translateZ(112px)" },
-    left:   { transform:"rotateY(-90deg) translateZ(112px)" },
-    right:  { transform:"rotateY(90deg) translateZ(112px)" },
-    top:    { transform:"rotateX(90deg) translateZ(112px)" },
-    bottom: { transform:"rotateX(-90deg) translateZ(112px)" },
-  }[pos];
-  return <div className={base} style={style}><span className="text-lg">{children}</span></div>;
+import React, { useEffect, useMemo, useState } from "react";
+import Modal from "./Modal.jsx";
+const FACES=[{key:"javascript",title:"JavaScript",summary:"Interactive apps, UI glue, tooling."},{key:"python",title:"Python",summary:"Data work, quick tools, automation."},{key:"react",title:"React",summary:"Modern front-ends, SPA patterns."},{key:"node",title:"Node",summary:"APIs, CLIs, integrations."},{key:"java",title:"Java",summary:"Enterprise adapters, JVM stacks."},{key:"swift",title:"Swift",summary:"iOS prototypes, SDK evaluations."}];
+function useMQ(q){const[s,setS]=useState(false);useEffect(()=>{const m=window.matchMedia(q);const h=e=>setS(e.matches);setS(m.matches);m.addEventListener("change",h);return()=>m.removeEventListener("change",h)},[q]);return s;}
+export default function Cube(){const narrow=useMQ("(max-width:1023px)");const[active,setActive]=useState(0);const[open,setOpen]=useState(false);
+  const rot=useMemo(()=>{switch(active){case 0:return"rotateX(-18deg) rotateY(32deg)";case 1:return"rotateY(180deg) rotateX(-18deg) rotateY(32deg)";case 2:return"rotateY(90deg) rotateX(-18deg) rotateY(32deg)";case 3:return"rotateY(-90deg) rotateX(-18deg) rotateY(32deg)";case 4:return"rotateX(-90deg) rotateY(32deg)";case 5:return"rotateX(90deg) rotateY(32deg)";default:return"rotateX(-18deg) rotateY(32deg)" }},[active]);
+  if(narrow){return(<div className="skills-fallback">{FACES.map((f,i)=>(<button key={f.key} className="skill-card" onClick={()=>{setActive(i);setOpen(true);}}><div className="skill-title">{f.title}</div><div className="skill-sub">{f.summary}</div></button>))}<Modal open={open} onClose={()=>setOpen(false)} title={FACES[active]?.title}><p>{FACES[active]?.summary}</p><p className="mt-2 opacity-80">Ask me for examples; I can link repos, PoCs, or demos.</p></Modal></div>);}
+  return(<div className="cube-wrap"><div className="perspective"><div className="cube" style={{transform:rot}}>
+    <button className="cube-face cube-front"  onClick={()=>setOpen(true)} aria-label={FACES[0].title}><span>{FACES[0].title}</span></button>
+    <button className="cube-face cube-back"   onClick={()=>{setActive(1);setOpen(true);}} aria-label={FACES[1].title}><span>{FACES[1].title}</span></button>
+    <button className="cube-face cube-left"   onClick={()=>{setActive(2);setOpen(true);}} aria-label={FACES[2].title}><span>{FACES[2].title}</span></button>
+    <button className="cube-face cube-right"  onClick={()=>{setActive(3);setOpen(true);}} aria-label={FACES[3].title}><span>{FACES[3].title}</span></button>
+    <button className="cube-face cube-top"    onClick={()=>{setActive(4);setOpen(true);}} aria-label={FACES[4].title}><span>{FACES[4].title}</span></button>
+    <button className="cube-face cube-bottom" onClick={()=>{setActive(5);setOpen(true);}} aria-label={FACES[5].title}><span>{FACES[5].title}</span></button>
+  </div></div>
+  <div className="cube-legend"><span className="hint">Click to focus a face</span><div className="legend-row">
+    {FACES.map((f,i)=>(<button key={f.key} className={`legend-pill ${active===i?"active":""}`} onClick={()=>setActive(i)}>{f.title}</button>))}
+  </div></div>
+  <Modal open={open} onClose={()=>setOpen(false)} title={FACES[active]?.title}><p>{FACES[active]?.summary}</p><ul className="list"><li>What I’ve built: dashboards, APIs, adapters, PoCs.</li><li>Where I used it: client demos, presales, integrations.</li><li>Ask for a quick 2-min walkthrough.</li></ul></Modal></div>);
 }
