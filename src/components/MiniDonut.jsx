@@ -1,21 +1,17 @@
-import React, { useMemo } from "react";
-export default function MiniDonut({ value=70, label="", size=84 }){
-  const v = Math.max(0, Math.min(100, value));
-  const r = size*0.42, c = 2*Math.PI*r, dash = (v/100)*c;
-  const title = `${label}: ${v}%`;
-  const id = useMemo(()=>`mn-${Math.random().toString(36).slice(2)}`,[label]);
+import React from "react";
+export default function MiniDonut({ value=70, size=84, stroke=10, label="" }) {
+  const r=(size-stroke)/2, c=2*Math.PI*r, v=Math.max(0,Math.min(100,value)), dash=(v/100)*c;
   return (
-    <div className="flex flex-col items-center gap-2" title={title} aria-label={title}>
-      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} role="img" aria-labelledby={id}>
-        <title id={id}>{title}</title>
+    <div className="mini-donut">
+      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} aria-label={`${label} ${v}%`}>
         <g transform={`translate(${size/2},${size/2})`}>
-          <circle r={r} fill="none" stroke="rgba(255,255,255,0.12)" strokeWidth="10" />
-          <circle r={r} fill="none" stroke="rgb(45 212 191)" strokeWidth="10"
-                  strokeDasharray={`${dash} ${c-dash}`} strokeDashoffset="0"
-                  transform="rotate(-90)"/>
+          <circle r={r} className="mini-donut-track" strokeWidth={stroke} fill="none" />
+          <circle r={r} className="mini-donut-ring" strokeWidth={stroke} fill="none"
+                  strokeDasharray={`${dash} ${c-dash}`} strokeDashoffset="0" />
+          <text textAnchor="middle" dominantBaseline="central" className="mini-donut-text">{v}%</text>
         </g>
       </svg>
-      <div className="text-[11px] leading-4 opacity-80 text-center">{label}</div>
+      {label ? <div className="mini-donut-label">{label}</div> : null}
     </div>
   );
 }
