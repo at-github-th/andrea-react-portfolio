@@ -167,3 +167,28 @@ html,body{ margin:0; }
 .modal-x{font-size:20px;line-height:1;border:1px solid rgba(255,255,255,.2);border-radius:10px;padding:2px 10px}
 .modal-body{padding:16px}
 .list{margin-left:1rem;list-style:disc}
+/* --- mini ring pies --- */
+.ring{display:flex;flex-direction:column;align-items:center;gap:6px}
+.ring svg{transform:rotate(-90deg)}
+.ring .bg{fill:none;stroke:rgba(255,255,255,.12)}
+.ring .fg{fill:none;transition:stroke-dasharray .25s ease}
+.ring .label{font-size:.75rem;opacity:.85;display:flex;gap:.5rem;align-items:center}
+.ring .label .pct{opacity:.65}
+@media (prefers-reduced-motion:reduce){.ring .fg{transition:none}}
+
+.areas-grid{
+  display:grid;
+  grid-template-columns:repeat(2,minmax(108px,1fr));
+  gap:18px;
+  justify-items:center;
+}
+@media (min-width:640px){
+  .areas-grid{grid-template-columns:repeat(3,minmax(120px,1fr))}
+}
+
+/* --- center these sections like Skills --- */
+#areas-accordion{max-width:900px;margin-left:auto;margin-right:auto}
+#projects .grid{margin-left:auto;margin-right:auto;max-width:1100px;justify-content:center}
+#ai .grid{margin-left:auto;margin-right:auto;max-width:1100px;justify-content:center}
+#projects .folder,#ai .folder{max-width:780px;width:100%;margin-left:auto;margin-right:auto}
+#projects h2,#ai h2{text-align:center}
