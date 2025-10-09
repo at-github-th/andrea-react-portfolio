@@ -1,62 +1,65 @@
 import React, { useState } from "react";
 import MiniDonut from "./MiniDonut.jsx";
 
-const sections = [
+const DATA = [
   {
     title: "Client Management",
-    metrics: [
-      { label: "Discovery", percent: 85 },
-      { label: "Workshops", percent: 80 },
-      { label: "Stakeholders", percent: 78 }
-    ]
+    items: [
+      { label: "Workshops", value: 92 },
+      { label: "Discovery", value: 88 },
+      { label: "Stakeholders", value: 86 },
+      { label: "Enablement", value: 84 },
+      { label: "Success KPIs", value: 80 },
+      { label: "Comms", value: 90 },
+    ],
   },
   {
-    title: "Networking",
-    metrics: [
-      { label: "Infra", percent: 70 },
-      { label: "Security", percent: 65 },
-      { label: "SRE", percent: 60 }
-    ]
+    title: "Solutions Engineering",
+    items: [
+      { label: "Integrations", value: 90 },
+      { label: "APIs/SDKs", value: 88 },
+      { label: "PoCs", value: 86 },
+      { label: "Demos", value: 84 },
+      { label: "Docs", value: 82 },
+      { label: "Security", value: 78 },
+    ],
   },
   {
-    title: "Web Competence",
-    metrics: [
-      { label: "React", percent: 75 },
-      { label: "Node", percent: 70 },
-      { label: "APIs", percent: 72 },
-      { label: "Vite", percent: 68 }
-    ]
+    title: "Development",
+    items: [
+      { label: "Front End", value: 82 },
+      { label: "Back End", value: 76 },
+      { label: "Data", value: 72 },
+      { label: "Testing", value: 78 },
+      { label: "DevOps", value: 68 },
+      { label: "Perf", value: 70 },
+    ],
   },
-  {
-    title: "Systems",
-    metrics: [
-      { label: "macOS", percent: 90 },
-      { label: "Windows", percent: 80 },
-      { label: "Linux", percent: 80 },
-      { label: "iOS", percent: 60 },
-      { label: "Android", percent: 60 }
-    ]
-  }
 ];
 
 export default function Areas(){
   const [open, setOpen] = useState(null);
   return (
     <div className="space-y-3">
-      {sections.map((s, i) => (
-        <div key={s.title} className="card">
+      {DATA.map((sec, i)=>(
+        <div key={sec.title} className="card rounded-xl p-4">
           <button
-            className="w-full flex items-center justify-between px-4 py-3"
+            type="button"
+            aria-expanded={open===i}
             onClick={()=>setOpen(open===i?null:i)}
+            className="w-full flex items-center justify-between gap-3 text-left"
           >
-            <span className="tracking-widest">{s.title.toUpperCase()}</span>
-            <span className="opacity-70">{open===i ? "–" : "+"}</span>
+            <span className="text-lg tracking-wider">{sec.title}</span>
+            <span className="badge">{open===i? "−" : "+"}</span>
           </button>
+
           {open===i && (
-            <div className="px-4 pb-4">
-              <div className="donut-grid">
-                {s.metrics.map(m => <MiniDonut key={m.label} label={m.label} percent={m.percent} />)}
-              </div>
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-4 mt-4 animate-in fade-in slide-in-from-top-2">
+              {sec.items.map((it, idx)=>(
+                <div style={{animationDelay:`${idx*40}ms`}} key={it.label}>
+                  <MiniDonut value={it.value} label={it.label} />
+                </div>
+              ))}
             </div>
           )}
         </div>

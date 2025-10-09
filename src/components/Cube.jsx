@@ -1,76 +1,56 @@
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 
-const SKILLS = ["JavaScript","Python","SQL","React","Node","Swift"];
+const FACES = [
+  { id:"js",     label:"JavaScript", rot:[0,   0]   },
+  { id:"py",     label:"Python",     rot:[0, 180]   },
+  { id:"react",  label:"React",      rot:[0, -90]   },
+  { id:"node",   label:"Node",       rot:[0,  90]   },
+  { id:"java",   label:"Java",       rot:[90,  0]   },
+  { id:"swift",  label:"Swift",      rot:[-90, 0]   },
+];
 
 export default function Cube(){
-  const [active, setActive] = useState(0);
-  const [rot, setRot] = useState({x:-15, y:20});
-  const startRef = useRef(null);
-
-  const snap = (idx)=>{
-    setActive(idx);
-    const snaps = [
-      {x:0,   y:0},
-      {x:0,   y:180},
-      {x:0,   y:-90},
-      {x:0,   y:90},
-      {x:-90, y:0},
-      {x:90,  y:0},
-    ];
-    setRot(snaps[idx]);
-  };
-
-  const onDown = (e)=>{
-    startRef.current = { x:(e.touches?.[0]?.clientX ?? e.clientX), y:(e.touches?.[0]?.clientY ?? e.clientY), rot };
-    window.addEventListener("mousemove", onMove);
-    window.addEventListener("touchmove", onMove, {passive:false});
-    window.addEventListener("mouseup", onUp);
-    window.addEventListener("touchend", onUp);
-  };
-  const onMove = (e)=>{
-    if(!startRef.current) return;
-    const cx = (e.touches?.[0]?.clientX ?? e.clientX);
-    const cy = (e.touches?.[0]?.clientY ?? e.clientY);
-    const dx = cx - startRef.current.x;
-    const dy = cy - startRef.current.y;
-    setRot({ x: startRef.current.rot.x + dy*0.3, y: startRef.current.rot.y + dx*0.4 });
-  };
-  const onUp = ()=>{
-    startRef.current = null;
-    window.removeEventListener("mousemove", onMove);
-    window.removeEventListener("touchmove", onMove);
-    window.removeEventListener("mouseup", onUp);
-    window.removeEventListener("touchend", onUp);
-  };
+  const [active, setActive] = useState("js");
+  const [rx, ry] = FACES.find(f=>f.id===active)?.rot || [0,0];
 
   return (
-    <div className="space-y-4">
-      <div className="perspective select-none" onMouseDown={onDown} onTouchStart={onDown}>
-        <div className="cube" style={{ transform: `rotateX(${rot.x}deg) rotateY(${rot.y}deg)` }}>
-          <Face z={110} label={SKILLS[0]} />
-          <Face z={-110} ry={180} label={SKILLS[1]} />
-          <Face z={110} ry={-90} label={SKILLS[2]} />
-          <Face z={110} ry={90}  label={SKILLS[3]} />
-          <Face z={110} rx={90}  label={SKILLS[4]} />
-          <Face z={110} rx={-90} label={SKILLS[5]} />
+    <div className="grid md:grid-cols-[420px_1fr] gap-6 items-center">
+      <div className="perspective h-[240px] md:h-[320px]">
+        <div className="cube" style={{ transform:`rotateX(${rx}deg) rotateY(${ry}deg)` }}>
+          <Face pos="front">JavaScript</Face>
+          <Face pos="back">Python</Face>
+          <Face pos="left">React</Face>
+          <Face pos="right">Node</Face>
+          <Face pos="top">Java</Face>
+          <Face pos="bottom">Swift</Face>
         </div>
       </div>
-      <div className="flex flex-wrap gap-2 justify-center">
-        {SKILLS.map((s,i)=>(
-          <button key={s} onClick={()=>snap(i)} className={`badge ${active===i ? 'border-[var(--accent)] text-[var(--accent)]' : ''}`}>
-            {s}
-          </button>
-        ))}
+      <div className="space-y-2">
+        <div className="text-sm opacity-70">Click to focus a face</div>
+        <div className="flex flex-wrap gap-2">
+          {FACES.map(f=>(
+            <button key={f.id}
+              className={`btn ${active===f.id?"border-teal-400/50":""}`}
+              onClick={()=>setActive(f.id)}
+            >
+              {f.label}
+            </button>
+          ))}
+        </div>
       </div>
-      <p className="text-center text-xs opacity-60">Drag to rotate · Click a label to focus</p>
     </div>
   );
 }
 
-function Face({ z, rx=0, ry=0, label }){
-  return (
-    <div className="cube-face" style={{ transform: `rotateX(${rx}deg) rotateY(${ry}deg) translateZ(${z}px)` }}>
-      <span className="tracking-[0.16em]">{label}</span>
-    </div>
-  );
+function Face({ pos, children }){
+  const base = "cube-face bg-white/5";
+  const style = {
+    front:  { transform:"translateZ(112px)" },
+    back:   { transform:"rotateY(180deg) translateZ(112px)" },
+    left:   { transform:"rotateY(-90deg) translateZ(112px)" },
+    right:  { transform:"rotateY(90deg) translateZ(112px)" },
+    top:    { transform:"rotateX(90deg) translateZ(112px)" },
+    bottom: { transform:"rotateX(-90deg) translateZ(112px)" },
+  }[pos];
+  return <div className={base} style={style}><span className="text-lg">{children}</span></div>;
 }
