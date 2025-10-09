@@ -192,3 +192,30 @@ html,body{ margin:0; }
 #ai .grid{margin-left:auto;margin-right:auto;max-width:1100px;justify-content:center}
 #projects .folder,#ai .folder{max-width:780px;width:100%;margin-left:auto;margin-right:auto}
 #projects h2,#ai h2{text-align:center}
+/* Center the short descriptions under each section */
+.section > p:first-of-type,
+#profile h2 + p,
+#areas   h2 + p,
+#summary h2 + p,
+#projects h2 + p,
+#skills  h2 + p,
+#ai      h2 + p,
+#resume  h2 + p{
+  text-align:center;
+  margin-left:auto;margin-right:auto;
+  max-width:60ch;
+}
+
+/* Resume section: center icon + put download beneath it */
+#resume{ text-align:center; }
+#resume img, #resume svg{
+  display:block;
+  margin-left:auto;margin-right:auto;
+}
+#resume .btn, #resume a[download], #resume button{
+  display:inline-flex;
+  justify-content:center;
+  margin:12px auto 0;
+}
+#resume .resume-wrap{max-width:480px;margin-left:auto;margin-right:auto;text-align:center}
+#resume .resume-card{display:flex;align-items:center;justify-content:center;gap:.5rem}

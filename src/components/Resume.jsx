@@ -1,18 +1,25 @@
+import React from "react";
 
-import React from 'react'
-export default function Resume(){
+export default function Resume() {
   return (
-    <section className="section">
-      <h2>RESUME</h2>
-      <div className="grid md:grid-cols-2 gap-8 items-center">
-        <div className="card p-4">
-          <img src="/images/resume-placeholder.png" alt="Resume" className="rounded-xl" />
-        </div>
-        <div>
-          <p className="opacity-80 mb-4">Download my resume for background and projects; contact details included.</p>
-          <a className="btn" href="/Andrea_Tempestini_Resume.pdf" download>Download</a>
-        </div>
+    <div className="resume-wrap space-y-4">
+      <div className="card resume-card px-4 py-3">
+        <img
+          src="/resume-icon.svg"
+          alt=""
+          className="w-5 h-5 opacity-80"
+          onError={(e)=>{ e.currentTarget.style.display='none'; }}
+        />
+        <span className="tracking-wide">Resume</span>
       </div>
-    </section>
-  )
+
+      <p className="opacity-80">
+        Download my resume for background and projects; contact details included.
+      </p>
+
+      <a href="/resume.pdf" download className="btn mx-auto px-6 py-2">
+        Download
+      </a>
+    </div>
+  );
 }
