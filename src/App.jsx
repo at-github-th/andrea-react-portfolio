@@ -11,6 +11,7 @@ import Cube from './components/Cube.jsx'
 import NavOverlay from './components/NavOverlay.jsx'
 import ContactModal from './components/ContactModal.jsx'
 import FloatUI from './components/FloatUI.jsx'
+import WorldMap from './components/WorldMap.jsx'
 
 export default function App(){
   const [navOpen, setNavOpen] = useState(false)
@@ -39,9 +40,17 @@ export default function App(){
           <Projects />
         </section>
 
-        <section id="cube" className="section">
+        {/* World map (always visible) */}
+        <section id="worldmap" className="section">
+          <WorldMap />
+        </section>
+
+        {/* Optional: keep your 3D cube on wide screens */}
+        <section id="cube" className="section hidden xl:block">
+          <h2>Skills — 3D Cube</h2>
           <Cube />
         </section>
+
 
         <section id="skills" className="section">
           <OpsGrid />
