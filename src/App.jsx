@@ -24,46 +24,38 @@ export default function App(){
 </header></header>
 
       <main>
-        <section id="profile" className="section">
+<section id="profile" className="section">
           <Profile />
         </section>
 
-        <section id="areas" className="section">
+<section id="areas" className="section">
           <Areas />
         </section>
 
-        <section id="summary" className="section">
+<section id="summary" className="section">
           <Stats />
         </section>
 
-        <section id="projects" className="section">
-          <Projects />
-        </section>
-
-        {/* World map (always visible) */}
-        <section id="worldmap" className="section">
+<section id="worldmap" className="section">
           <WorldMap />
         </section>
 
-        {/* Optional: keep your 3D cube on wide screens */}
-        <section id="cube" className="section hidden xl:block">
-          <h2>Skills — 3D Cube</h2>
-          <Cube />
-        </section>
-
-
-        <section id="skills" className="section">
+<section id="skills" className="section">
           <OpsGrid />
         </section>
 
-        <section id="ai" className="section">
+<section id="projects" className="section">
+          <Projects />
+        </section>
+
+<section id="ai" className="section">
           <AIML />
         </section>
 
-        <section id="resume" className="section">
+<section id="resume" className="section">
           <Resume />
         </section>
-      </main>
+</main>
 
       <FloatUI onOpenMenu={()=>setNavOpen(true)} onOpenContact={()=>setContactOpen(true)} />
       <NavOverlay open={navOpen} onClose={()=>setNavOpen(false)} />
