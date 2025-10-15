@@ -1,7 +1,8 @@
+import Globe3D from "./components/Globe3D.jsx"
 import CountryPills from "./components/CountryPills.jsx"
 import TechGrid from "./components/TechGrid.jsx"
-import GlobeHero from "./components/GlobeHero.jsx"
-import Globe3D from './components/Globe3D.jsx'
+
+
 import WorldMap from "./components/WorldMap.jsx"
 import React, { useState } from 'react'
 import Hero from './components/Hero.jsx'

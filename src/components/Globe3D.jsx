@@ -1,139 +1,140 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useMemo, useRef, useEffect, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
 import * as THREE from "three";
 import { accounts } from "../data/accounts";
 
-const R = 1.6;
-const toVec3 = (lat, lon, r = R) => {
+const STATUS_COLOR = { active: "#34d399", pilot: "#60a5fa", poc: "#f59e0b" };
+
+function latLonToVec3(lat, lon, r=1){
   const phi = THREE.MathUtils.degToRad(90 - lat);
   const theta = THREE.MathUtils.degToRad(lon + 180);
-  const x = -r * Math.sin(phi) * Math.cos(theta);
-  const z =  r * Math.sin(phi) * Math.sin(theta);
-  const y =  r * Math.cos(phi);
-  return new THREE.Vector3(x, y, z);
-};
+  return new THREE.Vector3(
+    -r * Math.sin(phi) * Math.cos(theta),
+    r * Math.cos(phi),
+    r * Math.sin(phi) * Math.sin(theta)
+  );
+}
 
-function GlobeCore({ onReady }) {
+function GridMeridians({ radius=1.005 }){
   const group = useRef();
-  const [auto, setAuto] = useState(true);
-
-  useFrame((_, dt) => {
-    if (auto && group.current) group.current.rotation.y += dt * 0.12;
-  });
-
-  useEffect(() => { onReady?.(group.current, setAuto); }, [onReady]);
-
+  const material = useMemo(()=>new THREE.LineBasicMaterial({ color:"#1f2937", transparent:true, opacity:0.6 }),[]);
+  const geoCircle = (r)=>new THREE.CircleGeometry(r, 128).toNonIndexed();
+  const geo = useMemo(()=>{
+    const g = new THREE.BufferGeometry();
+    const circles = [];
+    for(let i=15;i<90;i+=15){
+      const c = geoCircle(radius*Math.sin(THREE.MathUtils.degToRad(i)));
+      circles.push(c);
+    }
+    const merged = THREE.BufferGeometryUtils?.mergeGeometries
+      ? THREE.BufferGeometryUtils.mergeGeometries(circles)
+      : circles[0];
+    return merged;
+  },[radius]);
   return (
     <group ref={group}>
       <mesh>
-        <sphereGeometry args={[R, 64, 64]} />
-        <meshStandardMaterial color="#0c2a3a" metalness={0.2} roughness={0.9} />
+        <sphereGeometry args={[radius, 64, 64]} />
+        <meshStandardMaterial color="#0b1220" roughness={0.9} metalness={0.05} />
       </mesh>
-      <mesh>
-        <sphereGeometry args={[R+0.002, 64, 64]} />
-        <meshStandardMaterial color="#0a1e2a" wireframe opacity={0.25} transparent />
+      <mesh scale={1.003}>
+        <sphereGeometry args={[radius, 32, 32]} />
+        <meshBasicMaterial wireframe wireframeLinewidth={1} color="#1f2a3a" transparent opacity={0.35}/>
       </mesh>
     </group>
   );
 }
 
-function Markers({ onPick }) {
-  const mesh = useRef();
-  const data = useMemo(() => accounts.map(a => ({
-    ...a, pos: toVec3(a.lat, a.lon, R+0.02)
-  })), []);
-
+function Markers({ onPick }){
+  const pts = useMemo(()=>accounts.map(a=>{
+    const p = latLonToVec3(a.lat, a.lon, 1.02);
+    return { ...a, pos:p, color: STATUS_COLOR[a.status] || "#a3a3a3" };
+  }),[]);
   return (
-    <group ref={mesh}>
-      {data.map((a, i) => (
-        <mesh
-          key={i}
-          position={a.pos}
-          onClick={(e) => { e.stopPropagation(); onPick?.(a); }}
-        >
-          <sphereGeometry args={[0.03, 16, 16]} />
-          <meshStandardMaterial
-            color={a.status === "active" ? "#34d399" : a.status === "pilot" ? "#60a5fa" : "#f59e0b"}
-            emissiveIntensity={0.6}
-          />
+    <group>
+      {pts.map((a,i)=>(
+        <mesh key={i} position={a.pos} onClick={(e)=>{ e.stopPropagation(); onPick(a); }}>
+          <sphereGeometry args={[0.018, 20, 20]} />
+          <meshStandardMaterial color={a.color} emissive={a.color} emissiveIntensity={0.2}/>
         </mesh>
       ))}
     </group>
   );
 }
 
-export default function Globe3D() {
-  const prefersReduce = typeof window !== "undefined" &&
-    window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-  const tooSmall = typeof window !== "undefined" && window.innerWidth < 900;
+function Scene({ onPick, focusReq }){
+  const group = useRef();
+  const controls = useRef();
+  const targetQuat = useRef(new THREE.Quaternion());
+  const tmpQ = new THREE.Quaternion();
 
-  if (prefersReduce || tooSmall) return null;
+  useEffect(()=>{
+    if(!focusReq) return;
+    const { lat, lon } = focusReq;
+    const v = latLonToVec3(lat, lon, 1);
+    const q = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0,0,1), v.clone().normalize());
+    targetQuat.current.copy(q);
+  },[focusReq]);
 
-  const controlsRef = useRef();
-  const globeRef = useRef(null);
-  const setAutoRef = useRef(() => {});
-  const [ready, setReady] = useState(false);
-
-  const onReady = (group, setAuto) => {
-    globeRef.current = group;
-    setAutoRef.current = setAuto;
-    setReady(true);
-  };
-
-  useEffect(() => {
-    if (!ready) return;
-    const handler = (ev) => {
-      const country = ev.detail?.country;
-      if (!country || !globeRef.current) return;
-      const first = accounts.find(a => a.country === country);
-      if (!first) return;
-
-      setAutoRef.current(false);
-
-      const target = toVec3(first.lat, first.lon, R).normalize();
-      const front = new THREE.Vector3(0, 0, 1);
-      const q = new THREE.Quaternion().setFromUnitVectors(target, front);
-
-      const g = globeRef.current;
-      const qStart = g.quaternion.clone();
-      const qEnd = q;
-      let t = 0;
-      const dur = 600;
-      let last = performance.now();
-
-      const anim = () => {
-        const now = performance.now();
-        t += (now - last) / dur;
-        last = now;
-        g.quaternion.slerpQuaternions(qStart, qEnd, Math.min(t, 1));
-        controlsRef.current?.update();
-        if (t < 1) requestAnimationFrame(anim);
-      };
-      requestAnimationFrame(anim);
-    };
-    window.addEventListener("focus-country", handler);
-    return () => window.removeEventListener("focus-country", handler);
-  }, [ready]);
+  useFrame((_,dt)=>{
+    if(group.current){
+      group.current.quaternion.slerp(targetQuat.current, Math.min(1, dt*2.5));
+    }
+  });
 
   return (
-    <div className="card p-0 overflow-hidden" style={{ height: 460 }}>
-      <Canvas camera={{ position: [0, 0, 4.8], fov: 45 }}>
-        <ambientLight intensity={0.6} />
-        <directionalLight intensity={0.8} position={[5, 5, 5]} />
-        <GlobeCore onReady={onReady} />
-        <Markers onPick={(a) => {
-          window.dispatchEvent(new CustomEvent("focus-country", { detail: { country: a.country } }));
-        }} />
-        <OrbitControls
-          ref={controlsRef}
-          enablePan={false}
-          minDistance={3.6}
-          maxDistance={7}
-          enableDamping
-          dampingFactor={0.08}
-        />
-      </Canvas>
-    </div>
+    <>
+      <ambientLight intensity={0.6}/>
+      <directionalLight position={[3,4,2]} intensity={1}/>
+      <directionalLight position={[-3,-2,-4]} intensity={0.3}/>
+      <pointLight position={[0,-3,0]} intensity={0.5}/>
+      <group ref={group} rotation={[0.25, 0.9, 0]}>
+        <GridMeridians radius={1}/>
+        <Markers onPick={onPick}/>
+      </group>
+      <OrbitControls ref={controls} enablePan={false} enableZoom={false} minPolarAngle={0.6} maxPolarAngle={2.5} dampingFactor={0.08} enableDamping />
+    </>
+  );
+}
+
+export default function Globe3D(){
+  const [detail, setDetail] = useState(null);
+  const [focusReq, setFocusReq] = useState(null);
+
+  useEffect(()=>{
+    const onFocusCountry = (ev)=>{
+      const country = ev.detail?.country;
+      if(!country) return;
+      const subset = accounts.filter(a=>a.country===country);
+      if(!subset.length) return;
+      const c = subset[0];
+      setFocusReq({ lat:c.lat, lon:c.lon });
+      setTimeout(()=>setDetail(c), 350);
+    };
+    window.addEventListener("focus-country", onFocusCountry);
+    return ()=>window.removeEventListener("focus-country", onFocusCountry);
+  },[]);
+
+  return (
+    <section id="globe" className="section">
+      <div className="card globe-wrap">
+        <div className="globe-canvas">
+          <Canvas camera={{ position:[0,0,3.2], fov:40 }} gl={{ antialias:true }}>
+            <Scene onPick={setDetail} focusReq={focusReq}/>
+          </Canvas>
+        </div>
+        {detail && (
+          <div className="globe-modal">
+            <div className="globe-modal-inner">
+              <div className="globe-title">{detail.name}</div>
+              <div className="globe-sub">{detail.country}</div>
+              <div className="globe-focus"><em>{detail.focus}</em></div>
+              <button className="btn mt-2" onClick={()=>setDetail(null)}>Close</button>
+            </div>
+          </div>
+        )}
+      </div>
+    </section>
   );
 }
