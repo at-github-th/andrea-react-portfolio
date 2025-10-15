@@ -1,3 +1,4 @@
+import L from "leaflet";
 import React, { useMemo, useRef, useEffect, useState } from "react";
 import { MapContainer, TileLayer, CircleMarker, Popup, FeatureGroup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
@@ -6,6 +7,7 @@ import { accounts as raw } from "../data/accounts.js";
 const STATUS_COLOR = { active: "#34d399", pilot: "#60a5fa", poc: "#f59e0b" };
 
 export default function WorldMap(){
+  const [map, setMap] = useState(null);
   const [filter, setFilter] = useState("all");
   const data = useMemo(() => raw.filter(a => filter==="all" ? true : a.status===filter), [filter]);
   const fgRef = useRef(null);
@@ -16,6 +18,30 @@ export default function WorldMap(){
     const b = fg.getBounds();
     if (b.isValid() && fg._map) fg._map.fitBounds(b.pad(0.3));
   }, [data.length]);
+
+  
+  useEffect(() => {
+    if (!map) return;
+    const handler = (ev) => {
+      const country = ev.detail?.country;
+      if (!country) return;
+      const subset = (Array.isArray(raw)?raw:[]).filter(a => a.country === country);
+      if (!subset.length) return;
+      const b = L.latLngBounds(subset.map(a => [a.lat, a.lon]));
+      if (b.isValid()) {
+        map.fitBounds(b.pad(0.4));
+        setTimeout(() => {
+          map.eachLayer(layer => {
+            if (layer.getLatLng && b.contains(layer.getLatLng())) {
+              if (layer.openPopup) layer.openPopup();
+            }
+          });
+        }, 350);
+      }
+    };
+    window.addEventListener("focus-country", handler);
+    return () => window.removeEventListener("focus-country", handler);
+  }, [map]);
 
   return (
     <div className="card p-3 md:p-4 space-y-3">
@@ -39,7 +65,7 @@ export default function WorldMap(){
       </div>
 
       <div className="w-full h-[420px] md:h-[520px] rounded-xl overflow-hidden">
-        <MapContainer center={[20,0]} zoom={2} scrollWheelZoom={false} style={{height:"100%",width:"100%"}}>
+        <MapContainer center={[20,0]} zoom={2} scrollWheelZoom={false} style={{height:"100%",width:"100%"}} whenCreated={setMap}>
           <TileLayer
             attribution="&copy; OpenStreetMap contributors"
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
