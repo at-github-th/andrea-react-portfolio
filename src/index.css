@@ -258,3 +258,16 @@ html,body{ margin:0; }
 }
 .tech-title{ font-weight:600; letter-spacing:.02em; margin-bottom:4px; }
 .tech-blurb{ opacity:.75; font-size:.9rem; }
+.globe-wrap{position:relative;padding:24px}
+.globe-canvas{width:100%;height:520px;border-radius:18px;overflow:hidden}
+@media (max-width:640px){.globe-canvas{height:420px}}
+.globe-modal{position:relative;margin-top:14px}
+.globe-modal-inner{border:1px solid rgba(255,255,255,.12);background:rgba(15,23,42,.6);backdrop-filter:saturate(120%) blur(6px);border-radius:14px;padding:14px}
+.globe-title{font-weight:600}
+.globe-sub{opacity:.8}
+.globe-focus{opacity:.9;margin-top:4px}
+.country-pills-wrap{margin-top:16px}
+.country-pills{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;align-items:center;max-width:1000px;margin-left:auto;margin-right:auto}
+.country-pills .pill{padding:6px 10px;border-radius:9999px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.03);font-size:.9rem;transition:transform .15s ease,border-color .2s ease,box-shadow .2s ease}
+.country-pills .pill:hover{transform:translateY(-1px);border-color:rgba(255,255,255,.28);box-shadow:0 6px 18px rgba(0,0,0,.25)}
+.country-pills .count{font-size:.78em;opacity:.7;margin-left:.35rem}
