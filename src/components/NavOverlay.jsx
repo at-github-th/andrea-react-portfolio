@@ -24,6 +24,7 @@ export default function NavOverlay({ open, onClose }) {
           <a href="#profile" onClick={onClose} className="block hover:opacity-80">Profile</a>
           <a href="#areas" onClick={onClose} className="block hover:opacity-80">Areas</a>
           <a href="#summary" onClick={onClose} className="block hover:opacity-80">Summary</a>
+          <a href="#worldmap" onClick={onClose}>World Map</a>
           <a href="#projects" onClick={onClose} className="block hover:opacity-80">Projects</a>
           <a href="#skills" onClick={onClose} className="block hover:opacity-80">Skills</a>
           <a href="#ai" onClick={onClose} className="block hover:opacity-80">AI / ML / Data</a>
