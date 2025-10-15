@@ -222,3 +222,38 @@ html,body{ margin:0; }
 
 /* World map container alignment */
 #worldmap .card{ max-width: 1100px; margin-left:auto; margin-right:auto; }
+
+#globe .w-full,
+#worldmap .card{
+  max-width:1100px;
+  margin-left:auto;
+  margin-right:auto;
+}
+
+/* --- TechGrid layout --- */
+.tech-grid{
+  display:grid;
+  grid-template-columns:repeat(1,minmax(0,1fr));
+  gap:16px;
+  max-width:900px;
+  margin-left:auto;margin-right:auto;
+}
+@media(min-width:640px){ .tech-grid{ grid-template-columns:repeat(2,minmax(0,1fr)); } }
+@media(min-width:1024px){ .tech-grid{ grid-template-columns:repeat(3,minmax(0,1fr)); } }
+
+.tech-card{
+  text-align:left;
+  padding:14px 16px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.12);
+  background:rgba(255,255,255,.03);
+  backdrop-filter:saturate(140%) blur(2px);
+  transition:transform .15s ease, box-shadow .2s ease, border-color .2s ease;
+}
+.tech-card:hover{
+  transform:translateY(-2px);
+  border-color:rgba(255,255,255,.25);
+  box-shadow:0 0 0 1px rgba(255,255,255,.08), 0 8px 24px rgba(0,0,0,.25);
+}
+.tech-title{ font-weight:600; letter-spacing:.02em; margin-bottom:4px; }
+.tech-blurb{ opacity:.75; font-size:.9rem; }

@@ -1,3 +1,6 @@
+import TechGrid from "./components/TechGrid.jsx"
+import GlobeHero from "./components/GlobeHero.jsx"
+import WorldMap from "./components/WorldMap.jsx"
 import React, { useState } from 'react'
 import Hero from './components/Hero.jsx'
 import Profile from './components/Profile.jsx'
@@ -11,7 +14,6 @@ import Cube from './components/Cube.jsx'
 import NavOverlay from './components/NavOverlay.jsx'
 import ContactModal from './components/ContactModal.jsx'
 import FloatUI from './components/FloatUI.jsx'
-import WorldMap from './components/WorldMap.jsx'
 
 export default function App(){
   const [navOpen, setNavOpen] = useState(false)
@@ -36,11 +38,20 @@ export default function App(){
           <Stats />
         </section>
 
+{/* Globe (placeholder – no three.js yet) */}
+<section id="globe" className="section ">
+  <GlobeHero />
+</section>
+
+{/* 2D World Map (Leaflet) */}
 <section id="worldmap" className="section">
-          <WorldMap />
-        </section>
+  <WorldMap />
+</section>
+
 
 <section id="skills" className="section">
+          <TechGrid />
+
           <OpsGrid />
         </section>
 
