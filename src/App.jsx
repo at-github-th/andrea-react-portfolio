@@ -1,5 +1,7 @@
+import CountryPills from "./components/CountryPills.jsx"
 import TechGrid from "./components/TechGrid.jsx"
 import GlobeHero from "./components/GlobeHero.jsx"
+import Globe3D from './components/Globe3D.jsx'
 import WorldMap from "./components/WorldMap.jsx"
 import React, { useState } from 'react'
 import Hero from './components/Hero.jsx'
@@ -38,10 +40,11 @@ export default function App(){
           <Stats />
         </section>
 
-{/* Globe (placeholder – no three.js yet) */}
-<section id="globe" className="section ">
-  <GlobeHero />
+<section id="globe" className="section">
+  <Globe3D />
+  <CountryPills />
 </section>
+
 
 {/* 2D World Map (Leaflet) */}
 <section id="worldmap" className="section">
