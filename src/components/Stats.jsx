@@ -2,31 +2,76 @@ import React, { useState } from "react";
 import SunburstChart from "./SunburstChart.jsx";
 import Modal from "./Modal.jsx";
 
+// ✅ Simplified + enriched taxonomy
 const sunburstData = [
-  { name: "Management", value: 100, children: [
-    { name: "Client Management", value: 56 },
-    { name: "Product Management", value: 44 }
-  ]},
-  { name: "Solutions", value: 39, children: [
-    { name: "Integrations", value: 20 },
-    { name: "Presales", value: 19 }
-  ]},
-  { name: "Development", value: 24, children: [
-    { name: "Front End", value: 12 },
-    { name: "Back End", value: 12 }
-  ]},
-  { name: "Science", value: 16, children: [
-    { name: "Biomechanics", value: 8 },
-    { name: "Robotics", value: 8 }
-  ]}
+  {
+    name: "Management",
+    value: 58,
+    meta: {
+      skills: ["Leadership", "Stakeholders", "Roadmapping"],
+      upskilling: ["PM frameworks", "Strategic comms"],
+    },
+    children: [
+      {
+        name: "Client Management",
+        value: 32,
+        meta: { skills: ["Discovery", "Negotiation"], upskilling: ["Account Strategy"] },
+      },
+      {
+        name: "Product Management",
+        value: 26,
+        meta: { skills: ["Roadmaps", "Prioritization"], upskilling: ["Metrics", "OKRs"] },
+      },
+    ],
+  },
+  {
+    name: "Solutions",
+    value: 34,
+    meta: {
+      skills: ["Integrations", "Presales"],
+      upskilling: ["Systems Design", "APIs"],
+    },
+    children: [
+      {
+        name: "Integrations",
+        value: 19,
+        meta: { skills: ["OAuth", "Webhooks"], upskilling: ["Security", "Scalability"] },
+      },
+      {
+        name: "Presales",
+        value: 15,
+        meta: { skills: ["Demos", "RFPs"], upskilling: ["Value mapping"] },
+      },
+    ],
+  },
+  {
+    name: "Development",
+    value: 28,
+    meta: {
+      skills: ["React", "Node", "Cloud"],
+      upskilling: ["Architecture", "Testing"],
+    },
+    children: [
+      {
+        name: "Front End",
+        value: 15,
+        meta: { skills: ["React", "Three.js"], upskilling: ["Accessibility"] },
+      },
+      {
+        name: "Back End",
+        value: 13,
+        meta: { skills: ["Node", "Python"], upskilling: ["Observability"] },
+      },
+    ],
+  },
 ];
 
-// Map each metric to a chart slice "path" (outer→inner)
+// 📌 Mapping metrics → chart slice paths
 const SEE_CHART_PATHS = {
-  exp:      ["Management"],
-  proj:     ["Solutions"],
-  clients:  ["Management", "Client Management"],
-  mtgs:     ["Solutions", "Presales"],
+  exp: ["Management"],
+  proj: ["Solutions"],
+  clients: ["Management", "Client Management"],
+  mtgs: ["Solutions", "Presales"],
 };
 
 const METRICS = [
@@ -37,8 +82,8 @@ const METRICS = [
     bullets: [
       "Customer-facing presales & integrations.",
       "Full project lifecycle: discovery → delivery.",
-      "Mentoring, enablement, and solution design."
-    ]
+      "Mentoring, enablement, and solution design.",
+    ],
   },
   {
     id: "proj",
@@ -47,8 +92,8 @@ const METRICS = [
     bullets: [
       "PoCs & production rollouts across industries.",
       "Fast MVPs with clean handoff docs & demos.",
-      "Strong bias for measurable outcomes."
-    ]
+      "Strong bias for measurable outcomes.",
+    ],
   },
   {
     id: "clients",
@@ -57,8 +102,8 @@ const METRICS = [
     bullets: [
       "SMB to enterprise—mixed complexity.",
       "Stakeholder management & clear comms.",
-      "Repeat wins through reliability."
-    ]
+      "Repeat wins through reliability.",
+    ],
   },
   {
     id: "mtgs",
@@ -67,9 +112,9 @@ const METRICS = [
     bullets: [
       "Workshops, discovery, and solution reviews.",
       "Translate tech ↔ business clearly.",
-      "Concise follow-ups and next steps."
-    ]
-  }
+      "Concise follow-ups and next steps.",
+    ],
+  },
 ];
 
 function Tile({ m, onOpen }) {
@@ -85,23 +130,18 @@ function Tile({ m, onOpen }) {
   );
 }
 
-export default function Stats(){
+export default function Stats() {
   const [active, setActive] = useState(null);
-  const openMetric = METRICS.find(m => m.id === active);
+  const openMetric = METRICS.find((m) => m.id === active);
 
   const seeChart = () => {
-    // derive path for the currently open metric
     const path = SEE_CHART_PATHS[active] || [];
-    // tell chart to drill
     window.dispatchEvent(new CustomEvent("stats-chart:focus", { detail: { path } }));
-    // deep-link (optional)
     if (path.length) {
       const hash = "#chart=" + encodeURIComponent(path.join("."));
       history.replaceState(null, "", hash);
     }
-    // scroll to chart then close modal
-    const el = document.getElementById("summary-chart")
-           || document.querySelector("#summary svg, #summary canvas");
+    const el = document.getElementById("stats-chart");
     if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
     setActive(null);
   };
@@ -109,11 +149,12 @@ export default function Stats(){
   return (
     <div className="space-y-6">
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-        {METRICS.map(m => <Tile key={m.id} m={m} onOpen={setActive} />)}
+        {METRICS.map((m) => (
+          <Tile key={m.id} m={m} onOpen={setActive} />
+        ))}
       </div>
 
-      {/* Central chart with an anchor for 'See chart' */}
-      <div id="summary-chart">
+      <div id="stats-chart">
         <SunburstChart
           title="Stats"
           subtitle="Click slices to drill; Reset to return"
@@ -121,12 +162,7 @@ export default function Stats(){
         />
       </div>
 
-      {/* Modal details */}
-      <Modal
-        open={!!active}
-        onClose={() => setActive(null)}
-        ariaLabel={openMetric ? `${openMetric.label} details` : "Metric details"}
-      >
+      <Modal open={!!active} onClose={() => setActive(null)} ariaLabel={openMetric ? `${openMetric.label} details` : "Metric details"}>
         {openMetric && (
           <div className="space-y-3">
             <div className="flex items-start justify-between gap-4">
@@ -140,7 +176,9 @@ export default function Stats(){
               </div>
             </div>
             <ul className="mt-2 space-y-1 text-sm opacity-90">
-              {openMetric.bullets.map((b,i)=>(<li key={i} className="list-disc list-inside">{b}</li>))}
+              {openMetric.bullets.map((b, i) => (
+                <li key={i} className="list-disc list-inside">{b}</li>
+              ))}
             </ul>
           </div>
         )}
