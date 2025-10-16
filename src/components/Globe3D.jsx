@@ -1,144 +1,235 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import { Canvas, useFrame } from "@react-three/fiber";
+// src/components/Globe3D.jsx
+import React, { useMemo, useRef, useState, useEffect } from "react";
+import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
+import * as THREE from "three";
 import { accounts } from "../data/accounts";
-import AccountListModal from "./AccountListModal.jsx";
 
-const STATUS = { active:"#34d399", pilot:"#60a5fa", poc:"#f59e0b" };
-
-function latLngToVec3(lat, lon, r=1){
-  const phi = (90-lat) * Math.PI/180;
-  const theta = (lon+180) * Math.PI/180;
-  return [
-    -r * Math.sin(phi) * Math.cos(theta),
-     r * Math.cos(phi),
-     r * Math.sin(phi) * Math.sin(theta)
-  ];
+// ---- helpers ----
+function toCartesian(lat, lon, radius = 1) {
+  const phi = (90 - lat) * (Math.PI / 180);
+  const theta = (lon + 180) * (Math.PI / 180);
+  const x = -radius * Math.sin(phi) * Math.cos(theta);
+  const y =  radius * Math.cos(phi);
+  const z =  radius * Math.sin(phi) * Math.sin(theta);
+  return new THREE.Vector3(x, y, z);
 }
 
-function Graticule({step=15, radius=1.001, opacity=.1}){
-  const lines=[];
-  for(let lon=-180; lon<=180; lon+=step){
-    const pts=[];
-    for(let lat=-90; lat<=90; lat+=3) pts.push(latLngToVec3(lat,lon,radius));
-    lines.push(pts);
-  }
-  for(let lat=-60; lat<=60; lat+=step){
-    const pts=[];
-    for(let lon=-180; lon<=180; lon+=3) pts.push(latLngToVec3(lat,lon,radius));
-    lines.push(pts);
-  }
-  return lines.map((pts,i)=>(
-    <group key={i}>
-      <line>
-        <bufferGeometry attach="geometry">
-          <bufferAttribute
-            attach="attributes-position"
-            count={pts.length}
-            array={new Float32Array(pts.flat())}
-            itemSize={3}
-          />
-        </bufferGeometry>
-        <lineBasicMaterial attach="material" color="white" opacity={opacity} transparent />
-      </line>
-    </group>
-  ));
-}
-
-function Pins({data, onPick, radius=1.02}){
-  const ref = useRef();
-  useEffect(()=>{ ref.current && ref.current.children.forEach(m=>m.lookAt(0,0,0)); },[data]);
+function CountryModal({ open, country, items, onClose, onSelect }) {
+  if (!open) return null;
   return (
-    <group ref={ref}>
-      {data.map((a,i)=>{
-        const [x,y,z]=latLngToVec3(a.lat,a.lon,radius);
-        const c = STATUS[a.status] || "#9ca3af";
-        return (
-          <mesh key={i} position={[x,y,z]} onClick={(e)=>{ e.stopPropagation(); onPick(a); }}>
-            <sphereGeometry args={[0.018,16,16]} />
-            <meshStandardMaterial color={c} emissive={c} emissiveIntensity={0.25} />
-          </mesh>
-        );
-      })}
+    <div className="modal-wrap" onClick={onClose}>
+      <div className="modal-card" onClick={e=>e.stopPropagation()}>
+        <div className="modal-head">
+          <strong>{country}</strong>
+          <button className="xbtn" onClick={onClose}>×</button>
+        </div>
+        <div className="modal-body">
+          {items.map((a,i)=>(
+            <button key={i} className="modal-row" onClick={()=>onSelect(a)}>
+              <div className="modal-title">{a.name}</div>
+              <div className="modal-sub">{a.focus}</div>
+            </button>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function AccountSheet({ open, account, onClose }) {
+  if (!open || !account) return null;
+  return (
+    <div className="modal-wrap" onClick={onClose}>
+      <div className="modal-card small" onClick={e=>e.stopPropagation()}>
+        <div className="modal-head">
+          <strong>{account.name}</strong>
+          <button className="xbtn" onClick={onClose}>×</button>
+        </div>
+        <div className="modal-body">
+          <div className="modal-sub">{account.country}</div>
+          <div className="modal-sub">{account.focus}</div>
+          <p className="opacity-70 text-sm mt-2">
+            (More project notes can go here.)
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ---- 3D parts ----
+function GlobeMesh() {
+  // base sphere
+  const mat = useMemo(()=>{
+    const m = new THREE.MeshStandardMaterial({
+      color: new THREE.Color("#0f172a"),
+      roughness: 0.9,
+      metalness: 0.0,
+      transparent: true,
+      opacity: 0.95
+    });
+    return m;
+  }, []);
+
+  // subtle radial “day/night” vignette
+  const grad = useMemo(()=>{
+    const g = new THREE.SphereGeometry(1.01, 64, 64);
+    const m = new THREE.MeshBasicMaterial({
+      color: "#0b1222",
+      transparent: true,
+      opacity: 0.4
+    });
+    return <mesh geometry={g} material={m} />;
+  }, []);
+
+  // graticule (lat/lon wireframe)
+  const wire = useMemo(()=>{
+    const geo = new THREE.SphereGeometry(1.001, 32, 32);
+    const mat = new THREE.MeshBasicMaterial({
+      color: "#3b3b59",
+      wireframe: true,
+      transparent: true,
+      opacity: 0.2
+    });
+    return <mesh geometry={geo} material={mat} />;
+  }, []);
+
+  return (
+    <group>
+      <mesh geometry={new THREE.SphereGeometry(1, 64, 64)} material={mat} />
+      {grad}
+      {wire}
     </group>
   );
 }
 
-function GlobeInner({onPick, spinTo}){
+function Pins({ data, onPick }) {
   const group = useRef();
-  useFrame(()=>{ group.current.rotation.y += 0.0005; });
-  useEffect(()=>{
-    if(!spinTo) return;
-    const {lat,lon} = spinTo;
-    const targetY = -((lon+180)*Math.PI/180);
-    const targetX = (lat-0)*Math.PI/180;
-    let t=0; const startY = group.current.rotation.y; const startX = group.current.rotation.x;
-    const anim = ()=>{ t=Math.min(1,t+0.04); group.current.rotation.y = startY + (targetY-startY)*t; group.current.rotation.x = startX + (targetX-startX)*t; if(t<1) requestAnimationFrame(anim); };
-    anim();
-  },[spinTo]);
+  const items = useMemo(()=>data.map((a, i) => {
+    const p = toCartesian(a.lat, a.lon, 1.02);
+    return { ...a, pos: p, key: `${a.name}-${i}` };
+  }), [data]);
 
   return (
     <group ref={group}>
-      <mesh>
-        <sphereGeometry args={[1, 96, 96]} />
-        <meshStandardMaterial color="#07141b" metalness={0.1} roughness={0.9} />
-      </mesh>
-      <Graticule />
-      <Pins data={accounts} onPick={onPick} />
+      {items.map(item => (
+        <mesh
+          key={item.key}
+          position={item.pos}
+          onClick={(e)=>{ e.stopPropagation(); onPick(item); }}
+        >
+          <sphereGeometry args={[0.02, 16, 16]} />
+          <meshStandardMaterial
+            color={ item.status==="active" ? "#34d399" :
+                    item.status==="pilot"  ? "#60a5fa" :
+                    item.status==="poc"    ? "#f59e0b" : "#a3a3a3" }
+            emissive="#000000"
+            roughness={0.6}
+          />
+        </mesh>
+      ))}
     </group>
   );
 }
 
+// main component
 export default function Globe3D(){
-  const [modal,setModal]=useState({open:false,country:"",items:[]});
-  const [spinTo,setSpinTo]=useState(null);
-  const countryMap = useMemo(()=>{
+  // filter/map data to unique countries map
+  const byCountry = useMemo(()=>{
     const m = new Map();
-    accounts.forEach(a=>{ const k=a.country; if(!m.has(k)) m.set(k,[]); m.get(k).push(a); });
+    for (const a of accounts) {
+      if (!m.has(a.country)) m.set(a.country, []);
+      m.get(a.country).push(a);
+    }
     return m;
-  },[]);
-  useEffect(()=>{
-    const onPill = (ev)=>{
-      const country=ev.detail?.country; if(!country) return;
-      const arr = countryMap.get(country)||[];
-      if(arr.length<=1){
-        const a = arr[0]; if(!a) return;
-        setSpinTo({lat:a.lat,lon:a.lon});
-        window.dispatchEvent(new CustomEvent("focus-account",{detail:{name:a.name}}));
-      }else{
-        setModal({open:true,country,items:arr});
-      }
-    };
-    window.addEventListener("focus-country", onPill);
-    return ()=>window.removeEventListener("focus-country", onPill);
-  },[countryMap]);
+  }, []);
 
-  useEffect(()=>{
-    const onFocusAcc = (ev)=>{
-      const name = ev.detail?.name;
-      const a = accounts.find(x=>x.name===name);
-      if(a) setSpinTo({lat:a.lat,lon:a.lon});
-    };
-    window.addEventListener("focus-account", onFocusAcc);
-    return ()=>window.removeEventListener("focus-account", onFocusAcc);
-  },[]);
+  const [countryOpen, setCountryOpen] = useState(null); // string | null
+  const [accountOpen, setAccountOpen] = useState(null); // object | null
+  const [controlsEnabled, setControlsEnabled] = useState(true);
+  const controlsRef = useRef();
 
-  const onPick = (a)=>{
-    window.dispatchEvent(new CustomEvent("open-account-modal",{detail:{account:a}}));
+  // listen for “focus-country” from pills
+  useEffect(()=>{
+    const handler = (ev)=>{
+      const c = ev.detail?.country;
+      if (!c || !byCountry.has(c)) return;
+      // compute average lat/lon for country to rotate towards
+      const list = byCountry.get(c);
+      const lat = list.reduce((s,a)=>s + a.lat, 0) / list.length;
+      const lon = list.reduce((s,a)=>s + a.lon, 0) / list.length;
+
+      // rotate: we point the controls target to origin and compute a quaternion
+      const v = toCartesian(lat, lon, 1);
+      const q = new THREE.Quaternion().setFromUnitVectors(
+        new THREE.Vector3(0,1,0), // “top” towards +Y
+        v.clone().normalize()
+      );
+      // animate a short slerp
+      const start = controlsRef.current?.object.quaternion.clone();
+      const end   = q;
+      if (!start || !end) return;
+
+      let t = 0;
+      const id = setInterval(()=>{
+        t += 0.06;
+        if (t >= 1) { t = 1; clearInterval(id); setCountryOpen(c); setControlsEnabled(false); }
+        controlsRef.current.object.quaternion.slerpQuaternions(start, end, t);
+      }, 16);
+    };
+    window.addEventListener("focus-country", handler);
+    return ()=>window.removeEventListener("focus-country", handler);
+  }, [byCountry]);
+
+  // when any modal opens, freeze controls to avoid stutter
+  useEffect(()=>{
+    const open = countryOpen || accountOpen;
+    setControlsEnabled(!open);
+  }, [countryOpen, accountOpen]);
+
+  const onPinPick = (item)=>{
+    setAccountOpen(item);
   };
 
+  const lights = (
+    <>
+      <ambientLight intensity={0.35} />
+      <directionalLight intensity={0.9} position={[3, 2, 2]} />
+      <directionalLight intensity={0.5} position={[-3, -2, -1]} />
+    </>
+  );
+
   return (
-    <div className="card p-3 md:p-6">
-      <div className="w-full h-[420px] md:h-[560px]">
-        <Canvas camera={{position:[0,0,2.3], fov:45}}>
-          <ambientLight intensity={0.35} />
-          <directionalLight position={[2,1,2]} intensity={1.2} />
-          <directionalLight position={[-2,-1,-2]} intensity={0.2} />
-          <GlobeInner onPick={onPick} spinTo={spinTo} />
-          <OrbitControls enablePan={false} enableZoom={false} />
-        </Canvas>
-      </div>
-      <AccountListModal open={modal.open} onClose={()=>setModal(v=>({...v,open:false}))} country={modal.country} items={modal.items} />
+    <div className={`globe-card ${!controlsEnabled ? "modal-open" : ""}`}>
+      <Canvas camera={{ position: [0, 0, 2.4], fov: 45 }}>
+        {lights}
+        <GlobeMesh />
+        <Pins data={accounts} onPick={onPinPick} />
+        <OrbitControls
+          ref={controlsRef}
+          enablePan={false}
+          enableZoom={false}
+          enableRotate={controlsEnabled}
+          autoRotate={controlsEnabled}
+          autoRotateSpeed={0.45}
+          dampingFactor={0.08}
+        />
+      </Canvas>
+
+      <CountryModal
+        open={!!countryOpen}
+        country={countryOpen || ""}
+        items={countryOpen ? byCountry.get(countryOpen) || [] : []}
+        onClose={()=>{ setCountryOpen(null); setControlsEnabled(true); }}
+        onSelect={(a)=>{ setAccountOpen(a); }}
+      />
+
+      <AccountSheet
+        open={!!accountOpen}
+        account={accountOpen}
+        onClose={()=>setAccountOpen(null)}
+      />
     </div>
   );
 }
