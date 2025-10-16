@@ -326,3 +326,213 @@ html,body{ margin:0; }
 .country-pills .pill:hover{transform:translateY(-1px);border-color:rgba(255,255,255,.28);box-shadow:0 6px 18px rgba(0,0,0,.25)}
 .country-pills .count{font-size:.78em;opacity:.7;margin-left:.35rem}
 .modal-backdrop + .card canvas { filter: saturate(.8) brightness(.8); }
+
+/* globe/sheet helpers */
+.card canvas { outline: none; }
+
+#globe3d .gloss {pointer-events:none}
+#globe3d canvas{outline:none}
+#globe3d{box-shadow:0 0 0 1px rgba(255,255,255,.06) inset, 0 40px 120px rgba(0,0,0,.35) inset}
+
+/* Overlay modal inside the globe card */
+#globe3d .modal{
+  position:absolute; left:50%; bottom:16px; transform:translateX(-50%);
+  width:min(880px,92%); background:rgba(8,14,26,.72); backdrop-filter:blur(8px);
+  border:1px solid rgba(255,255,255,.08); border-radius:14px; color:#e6f0ff;
+}
+#globe3d .modal-head{display:flex; align-items:center; justify-content:space-between; padding:12px 14px; border-bottom:1px solid rgba(255,255,255,.08)}
+#globe3d .modal-head .title{font-weight:600}
+#globe3d .modal-head .x{border:1px solid rgba(255,255,255,.12); border-radius:8px; padding:2px 8px; background:transparent}
+#globe3d .modal-body{padding:12px}
+#globe3d .modal .row{display:block; text-align:left; width:100%; border:1px solid rgba(255,255,255,.08); border-radius:10px; padding:12px 14px; margin:8px 0; background:rgba(255,255,255,.02)}
+#globe3d .modal .row:hover{border-color:rgba(255,255,255,.24)}
+#globe3d .row-title{font-weight:600}
+#globe3d .row-sub{font-size:.9rem; opacity:.8}
+
+/* Country pills (already present; keep) */
+.country-pills-wrap{margin-top:12px}
+.country-pills{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;align-items:center;max-width:1000px;margin-left:auto;margin-right:auto}
+.country-pills .pill{padding:6px 10px;border-radius:9999px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.03);font-size:.9rem;transition:transform .15s ease,border-color .2s ease,box-shadow .2s ease}
+.country-pills .pill:hover{transform:translateY(-1px);border-color:rgba(255,255,255,.28);box-shadow:0 6px 18px rgba(0,0,0,.25)}
+.country-pills .count{font-size:.78em;opacity:.7;margin-left:.35rem}
+
+/* Globe container + modal styling */
+#globe3d canvas{outline:none}
+#globe3d{box-shadow:0 0 0 1px rgba(255,255,255,.06) inset, 0 40px 120px rgba(0,0,0,.35) inset}
+#globe3d .modal{
+  position:absolute; left:50%; bottom:16px; transform:translateX(-50%);
+  width:min(880px,92%); background:rgba(10,16,28,.78); backdrop-filter:blur(10px);
+  border:1px solid rgba(255,255,255,.10); border-radius:14px; color:#e6f0ff;
+}
+#globe3d .modal-head{display:flex; align-items:center; justify-content:space-between; padding:12px 14px; border-bottom:1px solid rgba(255,255,255,.1)}
+#globe3d .modal-head .title{font-weight:600}
+#globe3d .modal-head .x{border:1px solid rgba(255,255,255,.16); border-radius:8px; padding:2px 10px; background:transparent}
+#globe3d .modal-body{padding:12px}
+#globe3d .modal .row{display:block; text-align:left; width:100%; border:1px solid rgba(255,255,255,.10); border-radius:10px; padding:12px 14px; margin:8px 0; background:rgba(255,255,255,.03)}
+#globe3d .modal .row:hover{border-color:rgba(255,255,255,.28)}
+#globe3d .row-title{font-weight:600}
+#globe3d .row-sub{font-size:.9rem; opacity:.85}
+
+/* Country pills */
+.country-pills-wrap{margin-top:12px}
+.country-pills{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;align-items:center;max-width:1000px;margin-left:auto;margin-right:auto}
+.country-pills .pill{padding:6px 10px;border-radius:9999px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.03);font-size:.9rem;transition:transform .15s ease,border-color .2s ease,box-shadow .2s ease}
+.country-pills .pill:hover{transform:translateY(-1px);border-color:rgba(255,255,255,.28);box-shadow:0 6px 18px rgba(0,0,0,.25)}
+.country-pills .count{font-size:.78em;opacity:.7;margin-left:.35rem}
+
+.globe-card{max-width:1100px;margin-left:auto;margin-right:auto;position:relative}
+.globe-wrap{aspect-ratio:16/10;width:100%;background:radial-gradient(120% 100% at 50% 0%, #0b1620 0%, #0b1320 60%, #0b1320 100%)}
+
+.geo-sheet{position:absolute;left:12px;right:12px;bottom:12px;background:rgba(5,10,18,.92);backdrop-filter:blur(6px);border:1px solid rgba(255,255,255,.08);border-radius:14px;box-shadow:0 18px 60px rgba(0,0,0,.45)}
+.geo-sheet-head{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border-bottom:1px solid rgba(255,255,255,.06)}
+.geo-sheet-head .title{letter-spacing:.02em;opacity:.9}
+.geo-sheet-head .x{width:28px;height:28px;border:1px solid rgba(255,255,255,.18);border-radius:9999px;display:grid;place-items:center;opacity:.85;background:transparent}
+.geo-list{display:grid;gap:10px;padding:12px}
+.geo-item{width:100%;text-align:left;border:1px solid rgba(255,255,255,.12);border-radius:12px;padding:12px 14px;background:rgba(255,255,255,.03)}
+.geo-item .name{font-weight:600;letter-spacing:.01em}
+.geo-item .sub{opacity:.7;font-size:.9rem;margin-top:2px}
+
+@media (max-width:680px){
+  .globe-wrap{aspect-ratio:1/1}
+  .geo-sheet{left:8px;right:8px}
+}
+.globe3d-wrap{position:relative;width:100%;height:100%}
+.globe3d-canvas{position:absolute;inset:0}
+.globe3d-loading{position:absolute;inset:auto 0 0 0;margin:auto;bottom:12px;text-align:center;opacity:.7}
+.country-pills-wrap{margin-top:12px}
+.country-pills{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;align-items:center;max-width:1000px;margin-left:auto;margin-right:auto}
+.country-pills .pill{padding:6px 10px;border-radius:9999px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.03);font-size:.9rem;transition:transform .15s ease,border-color .2s ease,box-shadow .2s ease}
+.country-pills .pill:hover{transform:translateY(-1px);border-color:rgba(255,255,255,.28);box-shadow:0 6px 18px rgba(0,0,0,.25)}
+.country-pills .count{font-size:.78em;opacity:.7;margin-left:.35rem}
+
+
+/* ---- Globe Futuristic UI ---- */
+.globe-card { position: relative; height: 640px; background: radial-gradient(1200px 600px at 50% 10%, rgba(94,234,212,0.06), rgba(15,23,42,1)); border-radius: 16px; overflow: hidden; box-shadow: 0 10px 40px rgba(0,0,0,0.35); }
+.globe-card canvas { outline: none; }
+
+.globe-toolbar { position: absolute; top: 12px; left: 12px; right: 12px; display: flex; gap: 8px; z-index: 5; }
+.input { background: rgba(2,6,23,0.6); border: 1px solid rgba(148,163,184,0.25); color: #e5e7eb; padding: 8px 10px; border-radius: 10px; backdrop-filter: blur(6px); }
+.btn { background: rgba(20,184,166,0.15); border: 1px solid rgba(45,212,191,0.35); color: #a7f3d0; padding: 8px 12px; border-radius: 10px; cursor: pointer; }
+.btn:hover { background: rgba(20,184,166,0.25); }
+.btn-secondary { background: rgba(59,130,246,0.15); border-color: rgba(59,130,246,0.35); color: #bfdbfe; }
+
+.modal-wrap { position: fixed; inset: 0; background: rgba(2,6,23,0.6); display:flex; align-items:center; justify-content:center; z-index: 20; backdrop-filter: blur(4px); }
+.modal-card { width: 560px; max-width: calc(100% - 2rem); background: rgba(2,6,23,0.85); border: 1px solid rgba(148,163,184,0.25); border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,0.5); }
+.modal-card.small { width: 420px; }
+.modal-card.wide { width: 760px; }
+.modal-head { display:flex; align-items:center; justify-content:space-between; padding: 12px 14px; border-bottom: 1px solid rgba(148,163,184,0.15); }
+.modal-body { padding: 10px 14px; max-height: 50vh; overflow: auto; }
+.xbtn { background: transparent; color: #94a3b8; border: none; font-size: 20px; cursor: pointer; }
+.modal-row { width: 100%; text-align: left; display:block; padding: 10px 8px; border-radius: 10px; border: 1px solid transparent; background: transparent; color: #e5e7eb; }
+.modal-row:hover { background: rgba(148,163,184,0.06); border-color: rgba(148,163,184,0.15); }
+.modal-title { font-weight: 600; }
+.modal-sub { font-size: 12px; color: #94a3b8; margin-top: 2px; }
+.empty { color: #94a3b8; padding: 16px; text-align: center; }
+
+.row { display:flex; align-items:center; gap: 8px; }
+.tabs { display:flex; gap: 6px; padding: 8px 12px; border-bottom: 1px solid rgba(148,163,184,0.12); }
+.tab { background: transparent; color: #93c5fd; border: 1px solid rgba(59,130,246,0.3); padding: 6px 10px; border-radius: 999px; cursor: pointer; }
+.tab.on { background: rgba(59,130,246,0.2); }
+.grid2 { display:grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.label { font-size: 11px; color: #94a3b8; }
+.value { font-size: 14px; color: #e5e7eb; }
+.mt { margin-top: 8px; }
+.pills { display: flex; gap: 6px; flex-wrap: wrap; }
+.pill { font-size: 11px; padding: 4px 8px; border-radius: 999px; background: rgba(148,163,184,0.15); border: 1px solid rgba(148,163,184,0.2); color: #cbd5e1; }
+.notes textarea { width: 100%; background: rgba(2,6,23,0.6); border: 1px solid rgba(148,163,184,0.25); color: #e5e7eb; border-radius: 12px; padding: 10px; }
+.actions { display:flex; gap: 8px; }
+
+.badge { display:inline-block; font-size: 10px; padding: 2px 8px; border-radius: 999px; border: 1px solid rgba(148,163,184,0.3); color: #cbd5e1; }
+.badge-active { border-color: rgba(16,185,129,0.5); color: #86efac; background: rgba(16,185,129,0.12); }
+.badge-pilot { border-color: rgba(59,130,246,0.5); color: #bfdbfe; background: rgba(59,130,246,0.12); }
+.badge-poc { border-color: rgba(245,158,11,0.5); color: #fde68a; background: rgba(245,158,11,0.12); }
+.badge-paused { border-color: rgba(148,163,184,0.5); color: #e5e7eb; background: rgba(148,163,184,0.12); }
+
+@media (max-width: 640px) {
+  .globe-card {
+    height: 420px; /* shorter box */
+  }
+
+  canvas {
+    max-width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  .globe-toolbar {
+    flex-wrap: wrap;
+  }
+
+  .globe-pills {
+    bottom: 8px;
+    overflow-x: auto;
+    padding: 6px;
+  }
+}
+/* -------------------------- */
+/* MOBILE FIX PACK (ADD ONLY) */
+/* -------------------------- */
+
+/* 1) Baseline mobile tightening */
+@media (max-width: 640px) {
+  .section { width: 100% !important; max-width: 100% !important; padding: 20px 14px !important; }
+  .card { border-radius: 14px; }
+}
+
+/* 2) Contact FAB must NEVER sit above modals & sheets */
+.float-btn,
+.contact-fab { z-index: 800; position: fixed; right: 16px; bottom: 16px; }
+
+/* Hide FAB while any modal is open; prevent background scroll */
+@supports selector(body:has(.modal-overlay)) {
+  body:has(.modal-overlay) { overflow: hidden; }
+  body:has(.modal-overlay) .float-btn,
+  body:has(.modal-overlay) .contact-fab { display: none; }
+}
+
+/* 3) Global modal sizing + scroll (applies to contact form, skills info, summaries, etc.) */
+.modal-overlay { z-index: 1000; padding: 12px; }
+.modal-card { width: min(680px, 92vw); max-height: 86vh; overflow: hidden; }
+.modal-body { max-height: calc(86vh - 56px); overflow: auto; }
+@media (max-width: 640px) {
+  .modal-card { width: 92vw; max-height: 84vh; }
+  .modal-body { max-height: calc(84vh - 56px); }
+}
+
+/* 4) 2D World Map: full-width, sane height, rounded edges */
+#worldmap .card { padding: 12px; }
+#worldmap .leaflet-container { width: 100% !important; height: clamp(280px, 55vh, 420px) !important; border-radius: 14px; }
+#worldmap .leaflet-pane, #worldmap .leaflet-control-container { font-size: 14px; }
+
+/* 5) Programming / Skills grid: 1-col on mobile, 2/3 cols up */
+.tech-grid { display:grid; gap:16px; max-width:900px; margin: 0 auto; grid-template-columns: 1fr; }
+@media (min-width: 640px) { .tech-grid { grid-template-columns: repeat(2, minmax(0,1fr)); } }
+@media (min-width:1024px) { .tech-grid { grid-template-columns: repeat(3, minmax(0,1fr)); } }
+
+/* skill/info popover uses global modal rules; ensure readable */
+.tech-card { text-align:left; padding:14px 16px; border-radius:14px; border:1px solid rgba(255,255,255,.12); background:rgba(255,255,255,.03); }
+
+/* 6) “Summaries / Stats” sheets: center + keep inside viewport */
+.summary-sheet, .stats-sheet, .globe-modal, .geo-sheet {
+  left: 12px; right: 12px; bottom: 12px;
+  background: rgba(8,12,20,.92);
+  border: 1px solid rgba(255,255,255,.10);
+  border-radius: 14px;
+  backdrop-filter: blur(6px);
+  box-shadow: 0 18px 60px rgba(0,0,0,.45);
+}
+@media (max-width: 640px) {
+  .summary-sheet, .stats-sheet, .globe-modal, .geo-sheet { left: 8px; right: 8px; bottom: 8px; }
+}
+
+/* 7) Globe toolbar & pills: keep but prevent cutoff on mobile */
+.globe-toolbar { flex-wrap: wrap; gap: 8px; }
+.globe-pills { bottom: 8px; overflow-x: auto; padding: 6px; }
+
+/* 8) Ensure canvases/maps never overflow the card vertically */
+.card canvas, .globe-card canvas { width: 100%; height: clamp(260px, 52vh, 540px); display: block; }
+@media (max-width:640px){ .card canvas, .globe-card canvas { height: clamp(220px, 48vh, 420px); } }
+
+/* hide scrollbar for chip rows */
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+.no-scrollbar::-webkit-scrollbar { display: none; }
