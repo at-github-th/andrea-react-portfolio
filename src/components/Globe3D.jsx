@@ -1,140 +1,144 @@
-import React, { useMemo, useRef, useEffect, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
-import * as THREE from "three";
 import { accounts } from "../data/accounts";
+import AccountListModal from "./AccountListModal.jsx";
 
-const STATUS_COLOR = { active: "#34d399", pilot: "#60a5fa", poc: "#f59e0b" };
+const STATUS = { active:"#34d399", pilot:"#60a5fa", poc:"#f59e0b" };
 
-function latLonToVec3(lat, lon, r=1){
-  const phi = THREE.MathUtils.degToRad(90 - lat);
-  const theta = THREE.MathUtils.degToRad(lon + 180);
-  return new THREE.Vector3(
+function latLngToVec3(lat, lon, r=1){
+  const phi = (90-lat) * Math.PI/180;
+  const theta = (lon+180) * Math.PI/180;
+  return [
     -r * Math.sin(phi) * Math.cos(theta),
-    r * Math.cos(phi),
-    r * Math.sin(phi) * Math.sin(theta)
+     r * Math.cos(phi),
+     r * Math.sin(phi) * Math.sin(theta)
+  ];
+}
+
+function Graticule({step=15, radius=1.001, opacity=.1}){
+  const lines=[];
+  for(let lon=-180; lon<=180; lon+=step){
+    const pts=[];
+    for(let lat=-90; lat<=90; lat+=3) pts.push(latLngToVec3(lat,lon,radius));
+    lines.push(pts);
+  }
+  for(let lat=-60; lat<=60; lat+=step){
+    const pts=[];
+    for(let lon=-180; lon<=180; lon+=3) pts.push(latLngToVec3(lat,lon,radius));
+    lines.push(pts);
+  }
+  return lines.map((pts,i)=>(
+    <group key={i}>
+      <line>
+        <bufferGeometry attach="geometry">
+          <bufferAttribute
+            attach="attributes-position"
+            count={pts.length}
+            array={new Float32Array(pts.flat())}
+            itemSize={3}
+          />
+        </bufferGeometry>
+        <lineBasicMaterial attach="material" color="white" opacity={opacity} transparent />
+      </line>
+    </group>
+  ));
+}
+
+function Pins({data, onPick, radius=1.02}){
+  const ref = useRef();
+  useEffect(()=>{ ref.current && ref.current.children.forEach(m=>m.lookAt(0,0,0)); },[data]);
+  return (
+    <group ref={ref}>
+      {data.map((a,i)=>{
+        const [x,y,z]=latLngToVec3(a.lat,a.lon,radius);
+        const c = STATUS[a.status] || "#9ca3af";
+        return (
+          <mesh key={i} position={[x,y,z]} onClick={(e)=>{ e.stopPropagation(); onPick(a); }}>
+            <sphereGeometry args={[0.018,16,16]} />
+            <meshStandardMaterial color={c} emissive={c} emissiveIntensity={0.25} />
+          </mesh>
+        );
+      })}
+    </group>
   );
 }
 
-function GridMeridians({ radius=1.005 }){
+function GlobeInner({onPick, spinTo}){
   const group = useRef();
-  const material = useMemo(()=>new THREE.LineBasicMaterial({ color:"#1f2937", transparent:true, opacity:0.6 }),[]);
-  const geoCircle = (r)=>new THREE.CircleGeometry(r, 128).toNonIndexed();
-  const geo = useMemo(()=>{
-    const g = new THREE.BufferGeometry();
-    const circles = [];
-    for(let i=15;i<90;i+=15){
-      const c = geoCircle(radius*Math.sin(THREE.MathUtils.degToRad(i)));
-      circles.push(c);
-    }
-    const merged = THREE.BufferGeometryUtils?.mergeGeometries
-      ? THREE.BufferGeometryUtils.mergeGeometries(circles)
-      : circles[0];
-    return merged;
-  },[radius]);
+  useFrame(()=>{ group.current.rotation.y += 0.0005; });
+  useEffect(()=>{
+    if(!spinTo) return;
+    const {lat,lon} = spinTo;
+    const targetY = -((lon+180)*Math.PI/180);
+    const targetX = (lat-0)*Math.PI/180;
+    let t=0; const startY = group.current.rotation.y; const startX = group.current.rotation.x;
+    const anim = ()=>{ t=Math.min(1,t+0.04); group.current.rotation.y = startY + (targetY-startY)*t; group.current.rotation.x = startX + (targetX-startX)*t; if(t<1) requestAnimationFrame(anim); };
+    anim();
+  },[spinTo]);
+
   return (
     <group ref={group}>
       <mesh>
-        <sphereGeometry args={[radius, 64, 64]} />
-        <meshStandardMaterial color="#0b1220" roughness={0.9} metalness={0.05} />
+        <sphereGeometry args={[1, 96, 96]} />
+        <meshStandardMaterial color="#07141b" metalness={0.1} roughness={0.9} />
       </mesh>
-      <mesh scale={1.003}>
-        <sphereGeometry args={[radius, 32, 32]} />
-        <meshBasicMaterial wireframe wireframeLinewidth={1} color="#1f2a3a" transparent opacity={0.35}/>
-      </mesh>
+      <Graticule />
+      <Pins data={accounts} onPick={onPick} />
     </group>
-  );
-}
-
-function Markers({ onPick }){
-  const pts = useMemo(()=>accounts.map(a=>{
-    const p = latLonToVec3(a.lat, a.lon, 1.02);
-    return { ...a, pos:p, color: STATUS_COLOR[a.status] || "#a3a3a3" };
-  }),[]);
-  return (
-    <group>
-      {pts.map((a,i)=>(
-        <mesh key={i} position={a.pos} onClick={(e)=>{ e.stopPropagation(); onPick(a); }}>
-          <sphereGeometry args={[0.018, 20, 20]} />
-          <meshStandardMaterial color={a.color} emissive={a.color} emissiveIntensity={0.2}/>
-        </mesh>
-      ))}
-    </group>
-  );
-}
-
-function Scene({ onPick, focusReq }){
-  const group = useRef();
-  const controls = useRef();
-  const targetQuat = useRef(new THREE.Quaternion());
-  const tmpQ = new THREE.Quaternion();
-
-  useEffect(()=>{
-    if(!focusReq) return;
-    const { lat, lon } = focusReq;
-    const v = latLonToVec3(lat, lon, 1);
-    const q = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(0,0,1), v.clone().normalize());
-    targetQuat.current.copy(q);
-  },[focusReq]);
-
-  useFrame((_,dt)=>{
-    if(group.current){
-      group.current.quaternion.slerp(targetQuat.current, Math.min(1, dt*2.5));
-    }
-  });
-
-  return (
-    <>
-      <ambientLight intensity={0.6}/>
-      <directionalLight position={[3,4,2]} intensity={1}/>
-      <directionalLight position={[-3,-2,-4]} intensity={0.3}/>
-      <pointLight position={[0,-3,0]} intensity={0.5}/>
-      <group ref={group} rotation={[0.25, 0.9, 0]}>
-        <GridMeridians radius={1}/>
-        <Markers onPick={onPick}/>
-      </group>
-      <OrbitControls ref={controls} enablePan={false} enableZoom={false} minPolarAngle={0.6} maxPolarAngle={2.5} dampingFactor={0.08} enableDamping />
-    </>
   );
 }
 
 export default function Globe3D(){
-  const [detail, setDetail] = useState(null);
-  const [focusReq, setFocusReq] = useState(null);
+  const [modal,setModal]=useState({open:false,country:"",items:[]});
+  const [spinTo,setSpinTo]=useState(null);
+  const countryMap = useMemo(()=>{
+    const m = new Map();
+    accounts.forEach(a=>{ const k=a.country; if(!m.has(k)) m.set(k,[]); m.get(k).push(a); });
+    return m;
+  },[]);
+  useEffect(()=>{
+    const onPill = (ev)=>{
+      const country=ev.detail?.country; if(!country) return;
+      const arr = countryMap.get(country)||[];
+      if(arr.length<=1){
+        const a = arr[0]; if(!a) return;
+        setSpinTo({lat:a.lat,lon:a.lon});
+        window.dispatchEvent(new CustomEvent("focus-account",{detail:{name:a.name}}));
+      }else{
+        setModal({open:true,country,items:arr});
+      }
+    };
+    window.addEventListener("focus-country", onPill);
+    return ()=>window.removeEventListener("focus-country", onPill);
+  },[countryMap]);
 
   useEffect(()=>{
-    const onFocusCountry = (ev)=>{
-      const country = ev.detail?.country;
-      if(!country) return;
-      const subset = accounts.filter(a=>a.country===country);
-      if(!subset.length) return;
-      const c = subset[0];
-      setFocusReq({ lat:c.lat, lon:c.lon });
-      setTimeout(()=>setDetail(c), 350);
+    const onFocusAcc = (ev)=>{
+      const name = ev.detail?.name;
+      const a = accounts.find(x=>x.name===name);
+      if(a) setSpinTo({lat:a.lat,lon:a.lon});
     };
-    window.addEventListener("focus-country", onFocusCountry);
-    return ()=>window.removeEventListener("focus-country", onFocusCountry);
+    window.addEventListener("focus-account", onFocusAcc);
+    return ()=>window.removeEventListener("focus-account", onFocusAcc);
   },[]);
 
+  const onPick = (a)=>{
+    window.dispatchEvent(new CustomEvent("open-account-modal",{detail:{account:a}}));
+  };
+
   return (
-    <section id="globe" className="section">
-      <div className="card globe-wrap">
-        <div className="globe-canvas">
-          <Canvas camera={{ position:[0,0,3.2], fov:40 }} gl={{ antialias:true }}>
-            <Scene onPick={setDetail} focusReq={focusReq}/>
-          </Canvas>
-        </div>
-        {detail && (
-          <div className="globe-modal">
-            <div className="globe-modal-inner">
-              <div className="globe-title">{detail.name}</div>
-              <div className="globe-sub">{detail.country}</div>
-              <div className="globe-focus"><em>{detail.focus}</em></div>
-              <button className="btn mt-2" onClick={()=>setDetail(null)}>Close</button>
-            </div>
-          </div>
-        )}
+    <div className="card p-3 md:p-6">
+      <div className="w-full h-[420px] md:h-[560px]">
+        <Canvas camera={{position:[0,0,2.3], fov:45}}>
+          <ambientLight intensity={0.35} />
+          <directionalLight position={[2,1,2]} intensity={1.2} />
+          <directionalLight position={[-2,-1,-2]} intensity={0.2} />
+          <GlobeInner onPick={onPick} spinTo={spinTo} />
+          <OrbitControls enablePan={false} enableZoom={false} />
+        </Canvas>
       </div>
-    </section>
+      <AccountListModal open={modal.open} onClose={()=>setModal(v=>({...v,open:false}))} country={modal.country} items={modal.items} />
+    </div>
   );
 }

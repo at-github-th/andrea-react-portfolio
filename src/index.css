@@ -271,3 +271,10 @@ html,body{ margin:0; }
 .country-pills .pill{padding:6px 10px;border-radius:9999px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.03);font-size:.9rem;transition:transform .15s ease,border-color .2s ease,box-shadow .2s ease}
 .country-pills .pill:hover{transform:translateY(-1px);border-color:rgba(255,255,255,.28);box-shadow:0 6px 18px rgba(0,0,0,.25)}
 .country-pills .count{font-size:.78em;opacity:.7;margin-left:.35rem}
+#globe .card{max-width:1100px;margin-left:auto;margin-right:auto}
+.country-pills-wrap{margin-top:12px}
+.country-pills{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;align-items:center;max-width:1000px;margin-left:auto;margin-right:auto}
+.country-pills .pill{padding:6px 12px;border-radius:9999px;border:1px solid rgba(255,255,255,.14);background:rgba(255,255,255,.03);font-size:.92rem;transition:transform .15s ease,border-color .2s ease,box-shadow .2s ease}
+.country-pills .pill[aria-pressed="true"]{border-color:rgba(255,255,255,.45)}
+.country-pills .pill:hover{transform:translateY(-1px);border-color:rgba(255,255,255,.28);box-shadow:0 6px 18px rgba(0,0,0,.25)}
+.country-pills .count{font-size:.78em;opacity:.7;margin-left:.35rem}
