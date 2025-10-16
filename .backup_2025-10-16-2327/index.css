@@ -1,0 +1,21 @@
+/* Stats chart frame */
+#stats-chart .chart-box {
+  margin: 0 auto;
+  max-width: 760px;
+  aspect-ratio: 1 / 1;
+  overflow: hidden;
+}
+
+/* Crisp SVG text */
+#stats-chart svg,
+#stats-chart svg text {
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Tooltip polish */
+.echarts-tooltip {
+  backdrop-filter: blur(6px);
+  border-radius: 10px !important;
+}
