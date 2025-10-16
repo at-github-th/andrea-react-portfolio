@@ -21,6 +21,14 @@ const sunburstData = [
   ]}
 ];
 
+// Map each metric to a chart slice "path" (outer→inner)
+const SEE_CHART_PATHS = {
+  exp:      ["Management"],
+  proj:     ["Solutions"],
+  clients:  ["Management", "Client Management"],
+  mtgs:     ["Solutions", "Presales"],
+};
+
 const METRICS = [
   {
     id: "exp",
@@ -81,7 +89,17 @@ export default function Stats(){
   const [active, setActive] = useState(null);
   const openMetric = METRICS.find(m => m.id === active);
 
-  const scrollToChart = () => {
+  const seeChart = () => {
+    // derive path for the currently open metric
+    const path = SEE_CHART_PATHS[active] || [];
+    // tell chart to drill
+    window.dispatchEvent(new CustomEvent("stats-chart:focus", { detail: { path } }));
+    // deep-link (optional)
+    if (path.length) {
+      const hash = "#chart=" + encodeURIComponent(path.join("."));
+      history.replaceState(null, "", hash);
+    }
+    // scroll to chart then close modal
     const el = document.getElementById("summary-chart")
            || document.querySelector("#summary svg, #summary canvas");
     if (el) el.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -117,7 +135,7 @@ export default function Stats(){
                 <span className="text-base opacity-70 ml-2">{openMetric.label}</span>
               </div>
               <div className="shrink-0 flex items-center gap-2">
-                <button className="btn" onClick={scrollToChart}>See chart</button>
+                <button className="btn" onClick={seeChart}>See chart</button>
                 <button className="btn" onClick={() => setActive(null)} aria-label="Close">Close</button>
               </div>
             </div>
