@@ -1,76 +1,69 @@
-import Globe3D from "./components/Globe3D.jsx"
-import CountryPills from "./components/CountryPills.jsx"
-import TechGrid from "./components/TechGrid.jsx"
+import TechGrid from "./components/TechGrid.jsx";
+import CountryPills from "./components/CountryPills.jsx";
+import Globe3D from "./components/Globe3D.jsx";
+import WorldMap from "./components/WorldMap.jsx";
+import Hero from "./components/Hero.jsx";
+import Profile from "./components/Profile.jsx";
 
+import React, { useState } from 'react';
 
-import WorldMap from "./components/WorldMap.jsx"
-import React, { useState } from 'react'
-import Hero from './components/Hero.jsx'
-import Profile from './components/Profile.jsx'
-import Areas from './components/Areas.jsx'
-import Stats from './components/Stats.jsx'
-import Projects from './components/Projects.jsx'
-import OpsGrid from './components/OpsGrid.jsx'
-import AIML from './components/AIML.jsx'
-import Resume from './components/Resume.jsx'
-import Cube from './components/Cube.jsx'
-import NavOverlay from './components/NavOverlay.jsx'
-import ContactModal from './components/ContactModal.jsx'
-import FloatUI from './components/FloatUI.jsx'
+import Areas from './components/Areas.jsx';
+import Stats from './components/Stats.jsx';
+import Projects from './components/Projects.jsx';
+import OpsGrid from './components/OpsGrid.jsx';
+import AIML from './components/AIML.jsx';
+import Resume from './components/Resume.jsx';
+import NavOverlay from './components/NavOverlay.jsx';
+import ContactModal from './components/ContactModal.jsx';
+import FloatUI from './components/FloatUI.jsx';
 
 export default function App(){
-  const [navOpen, setNavOpen] = useState(false)
-  const [contactOpen, setContactOpen] = useState(false)
+  const [navOpen, setNavOpen] = useState(false);
+  const [contactOpen, setContactOpen] = useState(false);
 
   return (
     <div className="min-h-dvh">
-      <header className="section"><header className="section">
-  <header id="hero" className="section"><Hero /></header>
-</header></header>
+      <header className="section"><header className="section"><Hero /></header></header>
 
       <main>
-<section id="profile" className="section">
+        <section id="profile" className="section">
           <Profile />
         </section>
 
-<section id="areas" className="section">
+        <section id="areas" className="section">
           <Areas />
         </section>
 
-<section id="summary" className="section">
+        <section id="summary" className="section">
           <Stats />
         </section>
 
-<section id="globe" className="section">
-  <Globe3D />
-  <CountryPills />
-</section>
+        <section id="globe" className="section">
+          <Globe3D />
+          <CountryPills />
+        </section>
 
+        <section id="worldmap" className="section">
+          <WorldMap />
+        </section>
 
-{/* 2D World Map (Leaflet) */}
-<section id="worldmap" className="section">
-  <WorldMap />
-</section>
-
-
-<section id="skills" className="section">
+        <section id="skills" className="section">
           <TechGrid />
-
           <OpsGrid />
         </section>
 
-<section id="projects" className="section">
+        <section id="projects" className="section">
           <Projects />
         </section>
 
-<section id="ai" className="section">
+        <section id="ai" className="section">
           <AIML />
         </section>
 
-<section id="resume" className="section">
+        <section id="resume" className="section">
           <Resume />
         </section>
-</main>
+      </main>
 
       <FloatUI onOpenMenu={()=>setNavOpen(true)} onOpenContact={()=>setContactOpen(true)} />
       <NavOverlay open={navOpen} onClose={()=>setNavOpen(false)} />
@@ -80,5 +73,5 @@ export default function App(){
         © {new Date().getFullYear()} Andrea — Built with React & Tailwind
       </footer>
     </div>
-  )
+  );
 }

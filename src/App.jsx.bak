@@ -1,21 +1,28 @@
-import CountryPills from "./components/CountryPills.jsx"
-import TechGrid from "./components/TechGrid.jsx"
-import Globe3D from "./components/Globe3D.jsx"
-import Globe3D from './components/Globe3D.jsx'
-import WorldMap from "./components/WorldMap.jsx"
+import TechGrid from "./components/TechGrid.jsx";
+import CountryPills from "./components/CountryPills.jsx";
+import Globe3D from "./components/Globe3D.jsx";
+import WorldMap from "./components/WorldMap.jsx";
+import Hero from "./components/Hero.jsx";
+import Profile from "./components/Profile.jsx";
+
+
+
+
+
 import React, { useState } from 'react'
-import Hero from './components/Hero.jsx'
-import Profile from './components/Profile.jsx'
-import Areas from './components/Areas.jsx'
-import Stats from './components/Stats.jsx'
-import Projects from './components/Projects.jsx'
-import OpsGrid from './components/OpsGrid.jsx'
-import AIML from './components/AIML.jsx'
-import Resume from './components/Resume.jsx'
-import Cube from './components/Cube.jsx'
-import NavOverlay from './components/NavOverlay.jsx'
-import ContactModal from './components/ContactModal.jsx'
-import FloatUI from './components/FloatUI.jsx'
+
+
+
+import Areas from './components/Areas.jsx';
+import Stats from './components/Stats.jsx';
+import Projects from './components/Projects.jsx';
+import OpsGrid from './components/OpsGrid.jsx';
+import AIML from './components/AIML.jsx';
+import Resume from './components/Resume.jsx';
+import Cube from './components/Cube.jsx';
+import NavOverlay from './components/NavOverlay.jsx';
+import ContactModal from './components/ContactModal.jsx';
+import FloatUI from './components/FloatUI.jsx';
 
 export default function App(){
   const [navOpen, setNavOpen] = useState(false)
@@ -41,6 +48,8 @@ export default function App(){
         </section>
 
 <section id="globe" className="section">
+        <Globe3D />
+      </section>
   <Globe3D />
   <CountryPills />
 </section>
@@ -81,3 +90,4 @@ export default function App(){
     </div>
   )
 }
+
