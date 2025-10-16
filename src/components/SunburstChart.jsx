@@ -66,15 +66,28 @@ export default function SunburstChart({ title="Stats", subtitle="", data=[] }){
     };
 
     chart.setOption(option);
+    const publish = (node) => {
+      try {
+        const path = node.getPath().map(n => n.name).slice(1);
+        const model = node.getModel ? node.getModel() : null;
+        const data = model ? model.get('data') : null;
+        const meta = data && data.meta ? data.meta : {};
+        window.dispatchEvent(new CustomEvent('stats:focus', { detail: { path, meta } }));
+      } catch(e) {}
+    };
 
     // click-to-drill
     chart.on("click", params => {
-      const id = params.dataNode?.getId?.();
+      const node = params.dataNode;
+      if (!node) return;
+      const id = node.getId ? node.getId() : null;
       if (id != null) {
         chart.dispatchAction({ type: "sunburstHighlight", targetNodeId: id });
         chart.dispatchAction({ type: "sunburstRootToNode", targetNodeId: id });
+        publish(node);
       }
     });
+
 
     const onResize = () => chart.resize();
     window.addEventListener("resize", onResize);
