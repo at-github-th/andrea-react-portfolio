@@ -1,22 +1,26 @@
 // src/App.jsx
-import TechGrid from "./components/TechGrid.jsx";
-import CountryPills from "./components/CountryPills.jsx";
-import Globe3D from "./components/Globe3D.jsx";
-import WorldMap from "./components/WorldMap.jsx";
-import Hero from "./components/Hero.jsx";
-import Profile from "./components/Profile.jsx";
-
 import React, { useState } from "react";
 
+import Hero from "./components/Hero.jsx";
+import Profile from "./components/Profile.jsx";
 import Areas from "./components/Areas.jsx";
-import Stats from "./components/Stats.jsx";
-import Projects from "./components/Projects.jsx";
-import OpsGrid from "./components/OpsGrid.jsx";
-import AIML from "./components/AIML.jsx";
-import Resume from "./components/Resume.jsx";
+
+import Stats from "./components/Stats.jsx";             // STATS
+import Projects from "./components/Projects.jsx";       // FINANCE (Financial Projects)
+
+import Globe3D from "./components/Globe3D.jsx";         // SALES (3D + 2D)
+import CountryPills from "./components/CountryPills.jsx";
+import WorldMap from "./components/WorldMap.jsx";
+
+import OpsGrid from "./components/OpsGrid.jsx";         // SKILLS
+import AIML from "./components/AIML.jsx";               // ENGINEERING
+import TechGrid from "./components/TechGrid.jsx";       // SOFTWARE
+import Resume from "./components/Resume.jsx";           // RESUME
+
 import NavOverlay from "./components/NavOverlay.jsx";
 import ContactModal from "./components/ContactModal.jsx";
 import FloatUI from "./components/FloatUI.jsx";
+import CollapsibleSection from "./components/CollapsibleSection.jsx";
 
 export default function App() {
   const [navOpen, setNavOpen] = useState(false);
@@ -31,51 +35,62 @@ export default function App() {
       </header>
 
       <main>
-        <section id="profile" className="section">
+        {/* Compact, expandable sections */}
+        <CollapsibleSection id="profile" title="PROFILE" defaultOpen={false}>
           <Profile />
-        </section>
+        </CollapsibleSection>
 
         <section id="areas" className="section">
           <Areas />
         </section>
 
-        <section id="summary" className="section">
-          <Stats />
-        </section>
-
-        <section id="globe" className="section">
-          <Globe3D />
-          <CountryPills />
-        </section>
-
-        <section id="worldmap" className="section">
-          <WorldMap />
-        </section>
-
-        {/* Keep ops skills where they were */}
-        <section id="skills" className="section">
+        <CollapsibleSection id="skills" title="SKILLS" defaultOpen={false}>
           <OpsGrid />
-        </section>
+        </CollapsibleSection>
 
-        <section id="projects" className="section">
-          <Projects />
-        </section>
+        {/* STATS (leave as-is) */}
+        <CollapsibleSection id="stats" title="STATS" defaultOpen={false}>
+          <Stats />
+        </CollapsibleSection>
 
-        <section id="ai" className="section">
+        {/* SALES (3D Globe + 2D World Map) */}
+        <CollapsibleSection id="sales" title="SALES" defaultOpen={false}>
+          <section id="globe" className="section pt-0">
+            <Globe3D />
+            <CountryPills />
+          </section>
+          <section id="worldmap" className="section">
+            <WorldMap />
+          </section>
+        </CollapsibleSection>
+
+        {/* FINANCE (Financial Projects list) */}
+        <CollapsibleSection id="finance" title="FINANCE" defaultOpen={false}>
+          <section id="projects" className="section pt-0">
+            <Projects />
+          </section>
+        </CollapsibleSection>
+
+        {/* ENGINEERING (AI / Systems Engineering) */}
+        <CollapsibleSection id="engineering" title="ENGINEERING" defaultOpen={false}>
           <AIML />
-        </section>
+        </CollapsibleSection>
 
-        {/* SOFTWARE (moved here, narrowed for funnel layout) */}
-        <section id="software" className="section">
+        {/* SOFTWARE */}
+        <CollapsibleSection id="software" title="SOFTWARE" defaultOpen={false}>
           <TechGrid />
-        </section>
+        </CollapsibleSection>
 
-        <section id="resume" className="section">
+        {/* RESUME */}
+        <CollapsibleSection id="resume" title="RESUME" defaultOpen={false}>
           <Resume />
-        </section>
+        </CollapsibleSection>
       </main>
 
-      <FloatUI onOpenMenu={() => setNavOpen(true)} onOpenContact={() => setContactOpen(true)} />
+      <FloatUI
+        onOpenMenu={() => setNavOpen(true)}
+        onOpenContact={() => setContactOpen(true)}
+      />
       <NavOverlay open={navOpen} onClose={() => setNavOpen(false)} />
       <ContactModal open={contactOpen} onClose={() => setContactOpen(false)} />
 
