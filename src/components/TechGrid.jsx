@@ -1,114 +1,158 @@
-import React, { useState } from "react";
-import Modal from "./Modal.jsx"; // uses your existing modal
+// src/components/TechGrid.jsx
+import React, { useState, useEffect } from "react";
 
-const techs = [
+const TECH = [
   {
-    key: "js",
+    id: "js",
     name: "JavaScript",
     blurb: "UI behavior, data viz, and client integrations.",
-    bullets: [
-      "Built interactive charts, maps, and accordions.",
-      "Wired SDKs and browser-side auth flows.",
-      "Optimized bundles and HMR dev flow."
+    tags: ["ES202x", "Charts", "Integrations"],
+    details: [
+      "Interactive UI states and component logic.",
+      "Small data-viz (SVG/Canvas) and dashboard glue code.",
+      "Browser SDKs & embed scripts for analytics/payments.",
     ],
-    snippet: `export function sum(a,b){ return a + b }`
   },
   {
-    key: "py",
+    id: "py",
     name: "Python",
     blurb: "APIs, ETL, dashboards, and quick POCs.",
-    bullets: [
-      "Fast Flask/FastAPI services for POCs.",
-      "CSV → SQLite/Parquet ingestion tooling.",
-      "Automations for client demos and alerts."
+    tags: ["FastAPI", "Pandas", "CLI"],
+    details: [
+      "FastAPI services and simple workers/cron jobs.",
+      "ETL: CSV/JSON ingestion → SQLite/Postgres.",
+      "One-off scripts/CLIs to explore data & ship POCs fast.",
     ],
-    snippet: `from fastapi import FastAPI\napp = FastAPI()\n@app.get("/ping")\ndef ping():\n    return {"ok": True}`
   },
   {
-    key: "sql",
+    id: "sql",
     name: "SQL",
     blurb: "Reporting, Looker models, and operational queries.",
-    bullets: [
-      "Modeled marts and KPI rollups.",
-      "Wrote parameterized analytics queries.",
-      "Helped clients trace performance issues."
+    tags: ["Postgres", "SQLite", "Looker"],
+    details: [
+      "Analytical queries & KPI views, indexed for speed.",
+      "SQLite for portable POCs; Postgres in production.",
+      "Modeling for BI tools, reconciliation & ops checks.",
     ],
-    snippet: `SELECT date_trunc('day', ts) d, count(*) c\nFROM events\nGROUP BY 1\nORDER BY 1;`
   },
   {
-    key: "react",
+    id: "react",
     name: "React",
     blurb: "Component systems, routing, charts, and forms.",
-    bullets: [
-      "Built reusable cards, accordions, and modals.",
-      "Integrated ECharts/Leaflet/Recharts.",
-      "Clean Tailwind + accessible interactions."
+    tags: ["Hooks", "Vite", "R3F"],
+    details: [
+      "Design-system components & state via hooks/context.",
+      "Routing, form flows, validation, and accessibility.",
+      "Charts and small 3D previews (R3F) for demos.",
     ],
-    snippet: `export default function Badge({children}){\n  return <span className="px-2 py-1 rounded bg-white/10">{children}</span>\n}`
   },
   {
-    key: "node",
+    id: "node",
     name: "Node",
     blurb: "Contact mailers, proxies, and rate-limited endpoints.",
-    bullets: [
-      "Express + zod validation + helmet/cors.",
-      "Nodemailer SMTP integrations (app passwords).",
-      "Token verification for anti-bot gates."
+    tags: ["Express", "SSR", "Queues"],
+    details: [
+      "Thin API gateways & server-side helpers/SSR.",
+      "Webhook relays, auth middleware, and rate limits.",
+      "Mailers, task queues, and integration shims.",
     ],
-    snippet: `app.post("/contact", validate(schema), async (req,res)=>{ /* ... */ })`
   },
   {
-    key: "swift",
+    id: "swift",
     name: "Swift",
     blurb: "Prototyped native UI + Bluetooth/RFID demos.",
-    bullets: [
-      "Built small iOS utilities for field tests.",
-      "Bridged REST/JSON to device APIs.",
-      "Handoff flows between web and native."
+    tags: ["SwiftUI", "BLE", "Prototyping"],
+    details: [
+      "SwiftUI prototypes with clean, responsive layouts.",
+      "BLE/RFID scanning demos, simple device control.",
+      "Showcase apps for field trials & stakeholder demos.",
     ],
-    snippet: `struct Hello: View { var body: some View { Text("Hi!") } }`
-  }
+  },
 ];
 
-export default function TechGrid(){
-  const [open, setOpen] = useState(false);
-  const [sel, setSel] = useState(null);
+export default function TechGrid() {
+  const [open, setOpen] = useState(null);
 
-  const openModal = (t)=>{ setSel(t); setOpen(true); };
-  const closeModal = ()=>{ setOpen(false); setSel(null); };
+  useEffect(() => {
+    const onKey = (e) => e.key === "Escape" && setOpen(null);
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, []);
 
   return (
-    <div className="space-y-4">
-      <div className="tech-grid">
-        {techs.map(t=>(
-          <button
-            key={t.key}
-            type="button"
-            onClick={()=>openModal(t)}
-            className="tech-card"
-            aria-label={`Open details for ${t.name}`}
-          >
-            <div className="tech-title">{t.name}</div>
-            <div className="tech-blurb">{t.blurb}</div>
-          </button>
-        ))}
+    <section className="section">
+      {/* 🔥 Strictly narrower than AI */}
+      <div className="mx-auto w-full max-w-[500px] lg:max-w-[500px]">
+        <h2>SOFTWARE</h2>
+        <p className="opacity-70 mb-6">
+          Core programming languages and frameworks I use to build, integrate, and ship solutions.
+        </p>
+
+        <div className="grid grid-auto gap-5">
+          {TECH.map((t) => (
+            <button
+              key={t.id}
+              onClick={() => setOpen(t)}
+              className="card p-6 text-left rounded-xl transition hover:translate-y-[-2px] min-h-[112px] focus:outline-none focus:ring-2 focus:ring-teal-400/40"
+              aria-label={`Open details for ${t.name}`}
+            >
+              <div className="text-lg font-semibold">{t.name}</div>
+              <div className="mt-2 text-sm opacity-80">{t.blurb}</div>
+              <div className="flex flex-wrap gap-2 mt-3">
+                {t.tags.map((tag, i) => (
+                  <span key={i} className="badge">
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            </button>
+          ))}
+        </div>
       </div>
 
-      <Modal open={open} onClose={closeModal} title={sel?.name || "Details"}>
-        {sel && (
-          <div className="space-y-4">
-            <p className="opacity-80">{sel.blurb}</p>
-            <ul className="list-disc pl-5 space-y-1">
-              {sel.bullets.map((b,i)=><li key={i}>{b}</li>)}
-            </ul>
-            {sel.snippet && (
-              <pre className="mt-3 p-3 rounded bg-white/5 overflow-x-auto text-xs">
-{sel.snippet}
-              </pre>
-            )}
+      {open && (
+        <div
+          className="fixed inset-0 bg-black/60 backdrop-blur-sm grid place-items-center z-50"
+          onClick={() => setOpen(null)}
+          role="dialog"
+          aria-modal="true"
+          aria-label={`${open.name} usage details`}
+        >
+          <div
+            className="card p-6 w-[92vw] max-w-xl rounded-xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <div className="text-xl font-semibold">{open.name}</div>
+                <p className="opacity-80 text-sm mt-1">{open.blurb}</p>
+              </div>
+              <button className="btn" onClick={() => setOpen(null)} aria-label="Close">
+                Close
+              </button>
+            </div>
+
+            <div className="mt-4">
+              <div className="text-sm opacity-80 mb-2">Where I use it</div>
+              <ul className="space-y-2 list-disc pl-5">
+                {open.details.map((d, i) => (
+                  <li key={i} className="opacity-90">
+                    {d}
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="flex flex-wrap gap-2 mt-5">
+              {open.tags.map((t, i) => (
+                <span key={i} className="badge">
+                  {t}
+                </span>
+              ))}
+            </div>
           </div>
-        )}
-      </Modal>
-    </div>
+        </div>
+      )}
+    </section>
   );
 }
