@@ -57,7 +57,7 @@ export default function NavOverlay({ open, onClose }) {
           </button>
         </div>
 
-        {/* ✅ Centered navigation list */}
+        {/* Centered navigation list */}
         <nav className="flex flex-col gap-2 w-full items-center text-center">
           {LINKS.map((link) => (
             <button

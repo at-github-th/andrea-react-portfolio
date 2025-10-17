@@ -37,8 +37,9 @@ export default function App() {
       <main>
         {/* Compact, expandable sections */}
         <CollapsibleSection id="profile" title="PROFILE" defaultOpen={false}>
-          <Profile />
+          <Profile forceOpen />
         </CollapsibleSection>
+
 
         <section id="areas" className="section">
           <Areas />
