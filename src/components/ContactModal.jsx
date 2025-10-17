@@ -1,3 +1,4 @@
+// src/components/ContactModal.jsx
 import React, { useEffect, useRef, useState } from "react";
 import Modal from "./Modal.jsx";
 
@@ -6,27 +7,34 @@ export default function ContactModal({ open, onClose }){
   const widgetRef = useRef(null);
   const [token, setToken] = useState("");
 
+  // Mount Turnstile when opened
   useEffect(()=>{
-    if (!open) return;
-    if (!siteKey) return; // no-op if not configured
-    if (!window.turnstile) {
-      const s = document.createElement("script");
-      s.src="https://challenges.cloudflare.com/turnstile/v0/api.js";
-      s.async = true; s.defer = true;
-      s.onload = render; document.head.appendChild(s);
-    } else { render(); }
-    function render(){
-      if (!widgetRef.current) return;
-      if (widgetRef.current.dataset.rendered) return;
+    if (!open || !siteKey) return;
+    const render = () => {
+      if (!widgetRef.current || widgetRef.current.dataset.rendered) return;
       widgetRef.current.dataset.rendered = "1";
-      window.turnstile.render(widgetRef.current, {
+      window.turnstile?.render(widgetRef.current, {
         sitekey: siteKey,
         callback: (t)=>setToken(t),
         "error-callback": ()=>setToken(""),
         "expired-callback": ()=>setToken("")
       });
-    }
+    };
+    if (!window.turnstile) {
+      const s = document.createElement("script");
+      s.src="https://challenges.cloudflare.com/turnstile/v0/api.js";
+      s.async = true; s.defer = true; s.onload = render;
+      document.head.appendChild(s);
+    } else { render(); }
   },[open, siteKey]);
+
+  // lock/unlock body scroll while open
+  useEffect(() => {
+    if (!open) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => { document.body.style.overflow = prev; };
+  }, [open]);
 
   const onSubmit = async (e)=>{
     e.preventDefault();

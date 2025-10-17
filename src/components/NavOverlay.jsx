@@ -1,78 +1,93 @@
+// src/components/NavOverlay.jsx
 import React, { useEffect } from "react";
 
-const LINKS = [
-  { id: "profile",   label: "PROFILE" },
-  { id: "areas",     label: "AREAS" },
-  { id: "summary",   label: "SUMMARY" },
-  { id: "globe",     label: "GLOBE" },
-  { id: "skills",    label: "SKILLS" },
-  { id: "projects",  label: "PROJECTS" },
-  { id: "ai",        label: "AI / SYSTEMS ENGINEERING" },
-  { id: "resume",    label: "RESUME" },
-];
-
 export default function NavOverlay({ open, onClose }) {
+  // Order matches the new button sections
+  const items = [
+    { id: "profile",     label: "PROFILE" },
+    { id: "stats",       label: "STATS" },
+    { id: "sales",       label: "SALES" },
+    { id: "skills",      label: "SKILLS" },
+    { id: "engineering", label: "ENGINEERING" },
+    { id: "finance",     label: "FINANCE" },
+    { id: "software",    label: "SOFTWARE" },
+    { id: "resume",      label: "RESUME" },
+  ];
+
+  const go = (id) => {
+    onClose?.();
+    const el = document.getElementById(id);
+    if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  // Esc to close (only when open)
   useEffect(() => {
+    if (!open) return;
     const onKey = (e) => e.key === "Escape" && onClose?.();
-    if (open) window.addEventListener("keydown", onKey);
+    window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, [open, onClose]);
 
-  if (!open) return null;
-
-  const go = (id) => {
-    window.dispatchEvent(new Event("stats-tooltip:hide"));
-    const el = document.getElementById(id);
-    if (el) {
-      if (!el.dataset.fixedHeightApplied) {
-        el.classList.add("min-h-[80dvh]");
-        el.dataset.fixedHeightApplied = "1";
-      }
-      el.style.scrollMarginTop = "84px";
-      el.scrollIntoView({ behavior: "smooth", block: "start" });
-    }
-    onClose?.();
-  };
+  // lock/unlock body scroll while open
+  useEffect(() => {
+    if (!open) return;
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => { document.body.style.overflow = prev; };
+  }, [open]);
 
   return (
     <div
-      className="fixed inset-0 z-50 grid place-items-center bg-black/60 backdrop-blur-sm"
-      onClick={onClose}
-      role="dialog"
-      aria-modal="true"
-      aria-label="Navigation"
+      className={`fixed inset-0 z-50 transition
+                  ${open ? "opacity-100 pointer-events-auto" : "opacity-0 pointer-events-none"}`}
+      aria-hidden={!open}
     >
-      <div
-        className="card w-[92vw] max-w-md md:max-w-lg rounded-2xl p-5 md:p-6 flex flex-col items-center text-center"
-        onClick={(e) => e.stopPropagation()}
-      >
-        <div className="flex items-center justify-between w-full mb-2">
-          <div className="text-sm opacity-60 tracking-widest">MENU</div>
+      {open && (
+        <>
+          {/* Backdrop */}
           <button
-            className="float-btn"
+            type="button"
+            className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity opacity-100"
             onClick={onClose}
             aria-label="Close menu"
+          />
+          {/* Dialog */}
+          <div
+            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2
+                       w-[90vw] max-w-lg rounded-2xl border border-white/10
+                       bg-[#0b1220]/90 shadow-[0_0_120px_#1eead522] scale-100 opacity-100"
+            role="dialog"
+            aria-modal="true"
+            onClick={(e) => e.stopPropagation()}  /* keep clicks from closing */
           >
-            ×
-          </button>
-        </div>
+            <div className="p-5 border-b border-white/10 relative">
+              <div className="text-xs tracking-[0.35em] opacity-70 text-center">MENU</div>
+              <button
+                onClick={onClose}
+                className="absolute right-3 top-3 w-8 h-8 rounded-lg border border-white/10
+                           hover:bg-white/10 transition"
+                aria-label="Close"
+              >
+                ×
+              </button>
+            </div>
 
-        {/* Centered navigation list */}
-        <nav className="flex flex-col gap-2 w-full items-center text-center">
-          {LINKS.map((link) => (
-            <button
-              key={link.id}
-              onClick={() => go(link.id)}
-              className="w-full text-center px-4 py-3 rounded-lg uppercase tracking-widest text-[13px] md:text-sm
-                         transition border border-white/5
-                         hover:bg-white/5 hover:shadow-glow focus:outline-none
-                         focus:ring-2 focus:ring-teal-400/40"
-            >
-              {link.label}
-            </button>
-          ))}
-        </nav>
-      </div>
+            <div className="p-4 flex flex-col items-center gap-3">
+              {items.map((it) => (
+                <button
+                  key={it.id}
+                  onClick={() => go(it.id)}
+                  className="w-full max-w-md px-5 py-4 rounded-xl border border-white/10
+                             bg-white/[0.02] hover:bg-white/[0.06] hover:shadow-glow
+                             transition text-center tracking-widest text-sm"
+                >
+                  {it.label}
+                </button>
+              ))}
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 }
