@@ -536,3 +536,11 @@ html,body{ margin:0; }
 /* hide scrollbar for chip rows */
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 .no-scrollbar::-webkit-scrollbar { display: none; }
+/* crisp SVG text */
+#stats-chart svg text {
+  text-rendering: geometricPrecision;
+  -webkit-font-smoothing: antialiased;
+  font-weight: 500;
+}
+
+/* buttons reuse your .btn class; panel is inline-styled */
