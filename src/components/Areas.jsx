@@ -1,66 +1,81 @@
+// src/components/Areas.jsx
 import React, { useState } from "react";
 import MiniRing from "./MiniRing.jsx";
 
+// Data
 const AREAS = [
   {
     title: "Client Management",
     metrics: [
-      { label: "Discovery", value: 85 },
-      { label: "Workshops", value: 80 },
-      { label: "Roadmaps", value: 72 },
-      { label: "Success", value: 88 },
-      { label: "Enablement", value: 76 },
-      { label: "Contracts", value: 64 },
+      { label: "Discovery",   value: 85 },
+      { label: "Workshops",   value: 80 },
+      { label: "Roadmaps",    value: 72 },
+      { label: "Success",     value: 88 },
+      { label: "Enablement",  value: 76 },
+      { label: "Contracts",   value: 64 },
     ],
   },
   {
-    title: "Networking",
+    title: "Architecture",
     metrics: [
-      { label: "Routing", value: 70 },
-      { label: "Security", value: 65 },
-      { label: "Cloud", value: 60 },
-      { label: "CDN", value: 55 },
-      { label: "DNS", value: 75 },
-      { label: "SASE", value: 58 },
+      { label: "Integration Maps",  value: 78 },
+      { label: "Event-Driven",      value: 74 },
+      { label: "Boundary Design",   value: 72 },
+      { label: "Security by Design",value: 73 },
+      { label: "Scalability",       value: 70 },
+      { label: "Resilience",        value: 69 },
     ],
   },
   {
-    title: "Web Competence",
+    title: "Core Computing",
     metrics: [
-      { label: "React", value: 78 },
-      { label: "Node", value: 72 },
-      { label: "SQL", value: 68 },
-      { label: "APIs", value: 74 },
-      { label: "Testing", value: 62 },
-      { label: "DevOps", value: 59 },
+      { label: "Service Mesh",  value: 78 },
+      { label: "API Gateways",  value: 74 },
+      { label: "Identity & IAM",value: 72 },
+      { label: "Observability", value: 71 },
+      { label: "Infra as Code", value: 69 },
+      { label: "Edge & IoT",    value: 66 },
     ],
   },
   {
-    title: "Systems",
+    title: "Product",
     metrics: [
-      { label: "macOS", value: 90 },
-      { label: "Linux", value: 80 },
-      { label: "Windows", value: 78 },
-      { label: "iOS", value: 60 },
-      { label: "Android", value: 60 },
-      { label: "RFID", value: 55 },
+      { label: "Roadmaps",          value: 82 },
+      { label: "Discovery → MVP",   value: 80 },
+      { label: "GTM Alignment",     value: 76 },
+      { label: "Analytics / OKRs",  value: 74 },
+      { label: "Enablement Docs",   value: 72 },
+      { label: "Feedback Loops",    value: 70 },
     ],
   },
 ];
 
 export default function Areas() {
   const [open, setOpen] = useState(null);
+  // when a row opens, stamp a time so MiniRings remount → animate in
+  const [openedAt, setOpenedAt] = useState({});
+
+  const toggle = (idx, expanded) => {
+    if (expanded) {
+      setOpen(null);
+    } else {
+      setOpen(idx);
+      setOpenedAt((m) => ({ ...m, [idx]: Date.now() }));
+    }
+  };
 
   return (
     <div id="areas-accordion" className="space-y-3">
       {AREAS.map((a, idx) => {
         const expanded = open === idx;
+        const stamp = openedAt[idx] || 0;
+
         return (
           <div key={a.title} className="card overflow-hidden">
             <button
               className="w-full flex items-center justify-between px-4 py-3"
               aria-expanded={expanded}
-              onClick={() => setOpen(expanded ? null : idx)}
+              onClick={() => toggle(idx, expanded)}
             >
               <span className="tracking-widest">{a.title}</span>
               <span className="badge">{expanded ? "–" : "+"}</span>
@@ -70,7 +85,11 @@ export default function Areas() {
               <div className="px-4 pb-5">
                 <div className="areas-grid">
                   {a.metrics.map((m) => (
-                    <MiniRing key={m.label} label={m.label} value={m.value} />
+                    <MiniRing
+                      key={`${m.label}-${stamp}`} // force remount on expand → animation
+                      label={m.label}
+                      value={m.value}
+                    />
                   ))}
                 </div>
               </div>
