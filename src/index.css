@@ -544,3 +544,4 @@ html,body{ margin:0; }
 }
 
 /* buttons reuse your .btn class; panel is inline-styled */
+#stats-chart svg text{text-rendering:geometricPrecision;-webkit-font-smoothing:antialiased;font-weight:500}
