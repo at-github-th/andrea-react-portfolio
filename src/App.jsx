@@ -3,10 +3,9 @@ import React, { useState } from "react";
 
 import Hero from "./components/Hero.jsx";
 import Profile from "./components/Profile.jsx";
-import Areas from "./components/Areas.jsx";            // ← we’ll render this inside PROFILE now
+import Areas from "./components/Areas.jsx";            // ← rendered inside PROFILE
 import Stats from "./components/Stats.jsx";
 import Globe3D from "./components/Globe3D.jsx";
-import CountryPills from "./components/CountryPills.jsx";
 import WorldMap from "./components/WorldMap.jsx";
 import Projects from "./components/Projects.jsx";
 import OpsGrid from "./components/OpsGrid.jsx";
@@ -25,10 +24,15 @@ export default function App() {
 
   return (
     <div className="min-h-dvh">
-      <header className="section"><header className="section"><Hero /></header></header>
+      {/* HERO */}
+      <header className="section">
+        <header className="section">
+          <Hero />
+        </header>
+      </header>
 
       <main>
-        {/* PROFILE now expands to show the four donut rows */}
+        {/* PROFILE expands to show the four donut rows */}
         <CollapsibleSection id="profile" title="PROFILE" defaultOpen={false}>
           <Profile />
           <div className="mt-8">
@@ -36,44 +40,64 @@ export default function App() {
           </div>
         </CollapsibleSection>
 
-        {/* remove the old standalone Areas section */}
-        {/* <section id="areas" className="section"><Areas /></section> */}
-
+        {/* STATS */}
         <CollapsibleSection id="stats" title="STATS" defaultOpen={false}>
           <Stats />
         </CollapsibleSection>
 
+        {/* SALES (Globe + Map only — CountryPills removed) */}
         <CollapsibleSection id="sales" title="SALES" defaultOpen={false}>
-          <div className="section">
-            <Globe3D />
-            <CountryPills />
-            <WorldMap />
-          </div>
+          <section className="section">
+            <div className="mx-auto w-full max-w-5xl space-y-6">
+              {/* 3D globe */}
+              <div className="card p-0">
+                <div className="w-full">
+                  <Globe3D />
+                </div>
+              </div>
+
+              {/* world map */}
+              <div className="card p-0">
+                <div className="w-full">
+                  <WorldMap />
+                </div>
+              </div>
+            </div>
+          </section>
         </CollapsibleSection>
 
+        {/* SKILLS */}
         <CollapsibleSection id="skills" title="SKILLS" defaultOpen={false}>
           <OpsGrid />
         </CollapsibleSection>
 
+        {/* ENGINEERING */}
         <CollapsibleSection id="engineering" title="ENGINEERING" defaultOpen={false}>
           <AIML />
         </CollapsibleSection>
 
+        {/* FINANCE */}
         <CollapsibleSection id="finance" title="FINANCE" defaultOpen={false}>
-          {/* keep whatever you currently show here for Finance */}
-          {/* e.g., charts or financial projects if you’ve slotted them here */}
+          <section className="section">
+            <Projects />
+          </section>
         </CollapsibleSection>
 
+        {/* SOFTWARE */}
         <CollapsibleSection id="software" title="SOFTWARE" defaultOpen={false}>
           <TechGrid />
         </CollapsibleSection>
 
+        {/* RESUME */}
         <CollapsibleSection id="resume" title="RESUME" defaultOpen={false}>
           <Resume />
         </CollapsibleSection>
       </main>
 
-      <FloatUI onOpenMenu={() => setNavOpen(true)} onOpenContact={() => setContactOpen(true)} />
+      <FloatUI
+        onOpenMenu={() => setNavOpen(true)}
+        onOpenContact={() => setContactOpen(true)}
+      />
       <NavOverlay open={navOpen} onClose={() => setNavOpen(false)} />
       <ContactModal open={contactOpen} onClose={() => setContactOpen(false)} />
 
