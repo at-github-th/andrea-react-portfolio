@@ -95,23 +95,26 @@ export default function Stats() {
   };
 
   const onOpenModal = (id) => {
-    // hide any open chart description panel
     window.dispatchEvent(new Event("stats-tooltip:hide"));
     setActive(id);
   };
 
   return (
-    <div className="space-y-6">
+    // ⬅️ Persistent top spacing so tiles never touch the section header (even after modal open/close)
+    <div className="space-y-6 pt-4 md:pt-6">
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {METRICS.map(m => <Tile key={m.id} m={m} onOpen={onOpenModal} />)}
       </div>
 
-      <SunburstChart
-        title="Stats"
-        subtitle="Click slices to drill; Reset to return"
-        data={sunburstData}
-        unit="projects"
-      />
+      {/* Keep a stable anchor for “See chart” scroll-to */}
+      <div id="stats-chart">
+        <SunburstChart
+          title="Stats"
+          subtitle="Click slices to drill; Reset to return"
+          data={sunburstData}
+          unit="projects"
+        />
+      </div>
 
       <Modal
         open={!!active}
