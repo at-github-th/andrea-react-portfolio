@@ -565,3 +565,6 @@ html,body{ margin:0; }
 
 /* hide SystemMap inside Profile only */
 [data-section="profile"] .system-map{display:none!important}
+
+/* hide the orbit diagram only in PROFILE (keep it in SYSTEM MAP) */
+[data-section="profile"] .fx-panel:first-of-type{display:none!important}
