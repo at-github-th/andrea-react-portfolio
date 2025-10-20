@@ -1,3 +1,4 @@
+import CornerButtons from "./components/CornerButtons.jsx";
 import Badges from "./components/Badges.jsx";
 import SkillOrbit from "./components/SkillOrbit.jsx";
 // src/App.jsx
@@ -42,8 +43,7 @@ export default function App() {
       <main>
         {/* PROFILE expands to show the four donut rows */}
         <CollapsibleSection id="profile" title="PROFILE" defaultOpen={true} data-section="profile">
-  <div className="mb-8"><SkillOrbit /></div>
-  <Badges items={["AI/ML","System Architecture","Biomechanics","Fintech","Edge Systems"]} />
+<Badges items={["AI/ML","System Architecture","Biomechanics","Fintech","Edge Systems"]} />
 
           <Profile />
           <div className="mt-8">
