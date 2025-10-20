@@ -36,7 +36,7 @@ export default function App() {
   const [contactOpen, setContactOpen] = useState(false);
 
   return (
-    <div className="min-h-dvh" data-compact={useMode().compact ? "" : undefined}>
+    <div className="min-h-dvh" data-compact={compact ? "" : undefined}>
       <CompactToggle />
       {/* HERO */}
       <header className="section">
