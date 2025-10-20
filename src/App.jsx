@@ -1,4 +1,3 @@
-import CornerButtons from "./components/CornerButtons.jsx";
 import FuturistToggle from "./components/FuturistToggle.jsx";
 import Badges from "./components/Badges.jsx";
 import SkillOrbit from "./components/SkillOrbit.jsx";
@@ -40,7 +39,6 @@ export default function App() {
           <Hero />
         </header>
       <FuturistToggle />
-      <CornerButtons />
       </header>
 
       <main>
