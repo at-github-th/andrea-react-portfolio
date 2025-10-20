@@ -2,16 +2,16 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
 import "./index.css";
-import ModeProvider, { useMode } from "./context/ModeContext.jsx";
 import FuturistToggle from "./components/FuturistToggle.jsx";
-import FuturistLayout from "./futurist/FuturistLayout.jsx";
-function Root(){ const { futurist } = useMode(); return (<>{futurist ? <FuturistLayout/> : <App/>}<FuturistToggle/></>); }
+// robust provider import (works whether default or named export)
+import * as ModeCtx from "./context/ModeContext";
+const Provider = ModeCtx.ModeProvider || ModeCtx.default || React.Fragment;
+
 ReactDOM.createRoot(document.getElementById("root")).render(
-import { hideProfileDiagram } from "./utils/hideProfileDiagram.js";
   <React.StrictMode>
-    <ModeProvider>
-      <Root />
-    </ModeProvider>
+    <Provider>
+      <App />
+      <FuturistToggle />
+  </Provider>
   </React.StrictMode>
 );
-
