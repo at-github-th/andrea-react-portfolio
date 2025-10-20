@@ -18,12 +18,44 @@ function openClassicOnly(id){
   if(target) target.scrollIntoView({behavior:"smooth",block:"start"});
 }
 
+// --- full-text search across Strategy/Story/Math/Tech ---
+function searchContent(query){
+  const q=query.trim().toLowerCase();
+  if(!q) return [];
+  const terms=q.split(/\s+/).filter(Boolean);
+  const results=[];
+  for(const [section, blocks] of Object.entries(SECTION_CONTENT)){
+    const joined = Object.values(blocks).join(" ").toLowerCase();
+    let score=0;
+    for(const t of terms){
+      const re=new RegExp(t.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),"g");
+      const hits=[...joined.matchAll(re)].length;
+      score += hits*5;
+    }
+    if(score>0){
+      // pick a snippet from the first matching block
+      let field="strategy", text=blocks.strategy;
+      for(const [k,v] of Object.entries(blocks)){
+        const idx=v.toLowerCase().indexOf(terms[0]);
+        if(idx!==-1){ field=k; text=v; break; }
+      }
+      const low=text.toLowerCase();
+      let i=low.indexOf(terms[0]); if(i<0) i=0;
+      const start=Math.max(0,i-60), end=Math.min(text.length,i+120);
+      const snippet=text.slice(start,end).replace(/\s+/g," ").trim();
+      results.push({section, score, field, snippet});
+    }
+  }
+  results.sort((a,b)=>b.score-a.score);
+  return results.slice(0,5);
+}
+
 function parseCommand(input, active){
-  const t=(input||"").trim();
-  if(!t) return {text:'Commands: open <section> • classic [section] • summarize <section> • suggest • reset • help'};
-  for(const r of PHRASE_ROUTER){ if(r.rx.test(t)) return {action:"focus", target:r.target, text:r.cmd}; }
-  const low=t.toLowerCase(); const key=(x)=>x.replace(/\s+/g,'-');
-  if(low==="help") return {text:'open <section> • classic [section] • summarize <section> • suggest • reset'};
+  const raw=(input||"").trim(); const low=raw.toLowerCase();
+  if(!raw) return {text:'Search anything (e.g., "ROI storytelling") or use: open <section> • classic [section] • summarize <section> • suggest • reset • help'};
+  for(const r of PHRASE_ROUTER){ if(r.rx.test(raw)) return {action:"focus", target:r.target, text:r.cmd}; }
+  const key=(x)=>x.replace(/\s+/g,'-');
+  if(low==="help") return {text:'open <section> • classic [section] • summarize <section> • suggest • reset • (free text) search'};
   if(low==="reset") return {action:"reset"};
   if(low==="suggest") return {text:`Try: ${QUICK_HINTS[active||"profile"].join(" · ")}`};
   if(low==="classic") return {action:"classic", target:active||"profile"};
@@ -31,7 +63,13 @@ function parseCommand(input, active){
   const mClassic=/^(classic|open classic)\s+([a-z \-]+)$/.exec(low); if(mClassic) return {action:"classic", target:key(mClassic[2])};
   const mSum=/^summarize\s+([a-z \-]+)$/.exec(low); if(mSum){ const k=key(mSum[1]); const c=SECTION_CONTENT[k]; return {text:c?`${k.toUpperCase()} — Strategy: ${c.strategy}\nStory: ${c.story}`:"No summary."}; }
   if(DOMAINS.some(d=>d.key===low)) return {action:"focus", target:low};
-  return {text:`Unknown. ${QUICK_HINTS[active||"profile"].join(" · ")}`};
+  // fallback: full-text search
+  const hits=searchContent(raw);
+  if(hits.length){
+    const lines=hits.map((h,i)=>`${i+1}. ${h.section.toUpperCase()} · ${h.field}: …${h.snippet}…`).join("\n");
+    return {text:`Search results for “${raw}”:\n${lines}\n\nTip: type “open <section>” or “classic <section>”.`};
+  }
+  return {text:`No matches. ${QUICK_HINTS[active||"profile"].join(" · ")}`};
 }
 
 export default function FuturistLayout(){
@@ -54,8 +92,8 @@ export default function FuturistLayout(){
   };
 
   const content = SECTION_CONTENT[active||"profile"];
-  const hint = active ? "Click center to go Back • ⌘K for palette • 'classic' opens exact accordion" :
-    "Click a node to focus • ⌘K for palette • Type 'ROI storytelling' or 'schema design'";
+  const hint = active ? "Click center to go Back • ⌘K for palette • free-text searches content • 'classic' opens accordion"
+                      : "Click a node to focus • ⌘K for palette • Try searching: “ROI storytelling”, “schema design”, “p95 latency”";
 
   return (
     <div className="relative fx-panel shadow-neon p-5 md:p-7 mx-auto max-w-6xl overflow-hidden">
@@ -115,7 +153,7 @@ export default function FuturistLayout(){
         <div className="fixed inset-0 z-50 flex items-start md:items-center justify-center p-4" onClick={()=>setPaletteOpen(false)}>
           <div className="w-full max-w-2xl rounded-2xl border border-cyan-400/40 bg-[rgba(2,6,23,.92)] shadow-neon p-4" onClick={(e)=>e.stopPropagation()}>
             <div className="text-slate-200 mb-2">Command/AI Palette</div>
-            <input value={query} onChange={e=>setQuery(e.target.value)} onKeyDown={(e)=>{ if(e.key==="Enter"){ runCmd(query); } }} placeholder={`Try: ${QUICK_HINTS[active||"profile"].join(" · ")}`} className="w-full mb-3 px-3 py-2 rounded-md bg-slate-900/70 border border-slate-600 text-slate-200 outline-none"/>
+            <input value={query} onChange={e=>setQuery(e.target.value)} onKeyDown={(e)=>{ if(e.key==="Enter"){ runCmd(query); } }} placeholder={`Search content or use: ${QUICK_HINTS[active||"profile"].join(" · ")}`} className="w-full mb-3 px-3 py-2 rounded-md bg-slate-900/70 border border-slate-600 text-slate-200 outline-none"/>
             <div className="flex gap-2">
               <button onClick={()=>runCmd(query)} className="px-3 py-1.5 rounded-lg border border-cyan-400 text-cyan-200">Run</button>
               <button onClick={()=>setPaletteOpen(false)} className="px-3 py-1.5 rounded-lg border border-slate-600 text-slate-300">Close</button>
