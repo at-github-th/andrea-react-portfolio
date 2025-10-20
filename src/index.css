@@ -622,3 +622,11 @@ html,body{ margin:0; }
 @media(min-width:640px){.corner-btn{width:3.25rem;height:3.25rem}}
 
 a[href="#contact"].chip, a[href="#contact"].button, a[href="#contact"].contact, .contact-chip{display:none!important}
+
+/* Compact mode: tighter, minimalist */
+[data-compact] .section{padding-top:1rem;padding-bottom:1rem}
+[data-compact] .container{max-width:960px}
+[data-compact] h1{font-size:clamp(1.6rem,4.5vw,2.2rem);letter-spacing:.06em}
+[data-compact] h2{font-size:clamp(1.1rem,3.2vw,1.4rem);letter-spacing:.08em}
+[data-compact] .card{border-radius:1rem}
+[data-compact] .compact-hidden{display:none!important}
