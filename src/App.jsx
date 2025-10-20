@@ -1,5 +1,6 @@
 import FuturistToggle from "./components/FuturistToggle.jsx";
 import Badges from "./components/Badges.jsx";
+import FuturistPortal from "./futurist/FuturistPortal.jsx";
 import SkillOrbit from "./components/SkillOrbit.jsx";
 // src/App.jsx
 import React, { useState } from "react";
@@ -112,7 +113,8 @@ export default function App() {
         <CollapsibleSection id="resume" title="RESUME" defaultOpen={false}>
           <Resume />
         </CollapsibleSection>
-      </main>
+      <FuturistPortal />
+    </main>
 
       {/* Futurist overlay appears when compact is on */}
       <FuturistLayout />
