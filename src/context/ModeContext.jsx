@@ -1,9 +1,18 @@
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
-const ModeContext = createContext({ futurist:false, setFuturist:()=>{} });
-export const useMode = () => useContext(ModeContext);
-export default function ModeProvider({ children }) {
-  const [futurist, setFuturist] = useState(false);
-  useEffect(()=>{ const r=document.documentElement; futurist?r.classList.add("futurist"):r.classList.remove("futurist"); },[futurist]);
-  const value = useMemo(()=>({ futurist, setFuturist }),[futurist]);
-  return <ModeContext.Provider value={value}>{children}</ModeContext.Provider>;
+import { createContext, useContext, useMemo, useState } from "react";
+
+const ModeCtx = createContext(null);
+
+export function ModeProvider({ children }) {
+  const [compact, setCompact] = useState(false);
+  const value = useMemo(
+    () => ({ compact, setCompact, toggle: () => setCompact(v => !v) }),
+    [compact]
+  );
+  return <ModeCtx.Provider value={value}>{children}</ModeCtx.Provider>;
+}
+
+export function useMode() {
+  const ctx = useContext(ModeCtx);
+  if (!ctx) throw new Error("useMode must be used within <ModeProvider>");
+  return ctx;
 }

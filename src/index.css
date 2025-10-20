@@ -573,13 +573,47 @@ html,body{ margin:0; }
 [data-section="profile"] svg:first-of-type{display:none!important}
 
 /* force-hide the orbit diagram that appears at top of PROFILE only */
-[data-section="profile"] .fx-panel svg{display:none!important}
 
 /* Fallback: if a large svg remains at top of PROFILE, hide that block */
-[data-section="profile"] .fx-panel svg[data-hidden="true"]{display:none!important}
 
 /* Fallback: if a large svg remains at top of PROFILE, hide that block */
-[data-section="profile"] .fx-panel svg[data-hidden="true"]{display:none!important}
 
 /* hide duplicate orbit ONLY inside PROFILE; keep SYSTEM MAP */
 [data-section="profile"] .system-map{display:none!important}
+
+/* Fallback: if the PROFILE orbit remains, hide the largest svg wrapper */
+[data-section="profile"] svg[data-_orbitHidden="1"]{display:none!important}
+
+/* Fallback: if hidden via dataset */
+[data-section="profile"] svg[data-_orbitHidden="1"]{display:none!important}
+
+/* Remove both classic orbits; keep Compact UI only */
+[data-section="profile"] svg, [id="system-map"], [id="system-map"] * { display:none !important; }
+
+/* align corner FAB sizes (menu/home/contact/compact) */
+.fab-44{width:44px!important;height:44px!important}
+#contact, .contact, [data-contact-button]{width:44px;height:44px;border-radius:9999px}
+
+/* COMPACT MODE */
+:root { --section-pad: 3.5rem; }
+.section { padding-top: var(--section-pad); padding-bottom: var(--section-pad); }
+
+/* When compact, tighten spacing and hide heavy visuals */
+[data-compact] .section { padding-top: 1.25rem; padding-bottom: 1.25rem; }
+[data-compact] .compact-hidden { display: none !important; }
+[data-compact] .compact-stack > * + * { margin-top: 0.75rem; }
+[data-compact] .container { max-width: 980px; }
+[data-compact] .title-xl { font-size: 1.125rem; letter-spacing: 0.08em; }
+[data-compact] .text-body { font-size: .95rem; line-height: 1.5; }
+[data-compact] .card { border-radius: 1rem; }
+
+/* COMPACT MODE */
+:root { --section-pad: 3.5rem; }
+.section { padding-top: var(--section-pad); padding-bottom: var(--section-pad); }
+[data-compact] .section { padding-top: 1.25rem; padding-bottom: 1.25rem; }
+[data-compact] .compact-hidden { display: none !important; }
+[data-compact] .compact-stack > * + * { margin-top: 0.75rem; }
+[data-compact] .container { max-width: 980px; }
+[data-compact] .title-xl { font-size: 1.125rem; letter-spacing: 0.08em; }
+[data-compact] .text-body { font-size: .95rem; line-height: 1.5; }
+[data-compact] .card { border-radius: 1rem; }

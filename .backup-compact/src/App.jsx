@@ -2,8 +2,6 @@ import Badges from "./components/Badges.jsx";
 import SkillOrbit from "./components/SkillOrbit.jsx";
 // src/App.jsx
 import React, { useState } from "react";
-import CompactToggle from "./components/CompactToggle.jsx";
-import { useMode } from "./context/ModeContext.jsx";
 
 import Hero from "./components/Hero.jsx";
 import Profile from "./components/Profile.jsx";
@@ -22,6 +20,8 @@ import ContactModal from "./components/ContactModal.jsx";
 import FloatUI from "./components/FloatUI.jsx";
 import CollapsibleSection from "./components/CollapsibleSection.jsx";
 import { ModeProvider } from "./context/ModeContext.jsx";
+import FuturistLayout from "./futurist/FuturistLayout.jsx";
+import FuturistToggle from "./components/FuturistToggle.jsx";
 import SystemMap from "./components/SystemMap.jsx"; // use inside SYSTEM MAP section
 
 
@@ -30,8 +30,7 @@ export default function App() {
   const [contactOpen, setContactOpen] = useState(false);
 
   return (
-    <div className="min-h-dvh" data-compact={useMode().compact ? "" : undefined}>
-      <CompactToggle />
+    <div className="min-h-dvh">
       {/* HERO */}
       <header className="section">
         <header className="section">
