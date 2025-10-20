@@ -70,18 +70,18 @@ export default function App() {
           <section className="section">
             <div className="mx-auto w-full max-w-5xl space-y-6">
               {/* 3D globe */}
-              <div className="card p-0">
+              <div className="compact-hidden"><div className="card p-0">
                 <div className="w-full">
                   <Globe3D />
                 </div>
-              </div>
+              </div></div>
 
               {/* world map */}
-              <div className="card p-0">
+              <div className="compact-hidden"><div className="card p-0">
                 <div className="w-full">
                   <WorldMap />
                 </div>
-              </div>
+              </div></div>
             </div>
           </section>
         </CollapsibleSection>
