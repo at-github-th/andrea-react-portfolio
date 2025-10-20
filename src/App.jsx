@@ -5,7 +5,6 @@ import SkillOrbit from "./components/SkillOrbit.jsx";
 // src/App.jsx
 import React, { useState } from "react";
 import CompactToggle from "./components/CompactToggle.jsx";
-import { useMode } from "./context/ModeContext.jsx";
 
 import Hero from "./components/Hero.jsx";
 import Profile from "./components/Profile.jsx";
