@@ -617,3 +617,6 @@ html,body{ margin:0; }
 [data-compact] .title-xl { font-size: 1.125rem; letter-spacing: 0.08em; }
 [data-compact] .text-body { font-size: .95rem; line-height: 1.5; }
 [data-compact] .card { border-radius: 1rem; }
+
+.corner-btn{width:3rem;height:3rem}
+@media(min-width:640px){.corner-btn{width:3.25rem;height:3.25rem}}
