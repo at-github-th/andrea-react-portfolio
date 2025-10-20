@@ -620,3 +620,5 @@ html,body{ margin:0; }
 
 .corner-btn{width:3rem;height:3rem}
 @media(min-width:640px){.corner-btn{width:3.25rem;height:3.25rem}}
+
+a[href="#contact"].chip, a[href="#contact"].button, a[href="#contact"].contact, .contact-chip{display:none!important}
