@@ -31,8 +31,7 @@ export default function FloatUI({ onOpenMenu, onMenu, onOpenContact, onContact }
         className="fixed right-3 bottom-3 z-[10000] rounded-full px-3 py-2 border border-teal-400/30 bg-slate-900/70 hover:bg-teal-400/10 backdrop-blur shadow-lg"
       >
         <div className="flex items-center gap-2">
-          <Mail className="w-5 h-5" />
-          <span className="text-sm tracking-widest">Contact</span>
+          <Mail className="w-5 h-5" /></span>
         </div>
       </button>
     </>

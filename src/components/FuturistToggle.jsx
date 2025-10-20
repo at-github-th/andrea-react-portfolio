@@ -15,12 +15,7 @@ export default function FuturistToggle() {
     <button
       onClick={toggle}
       aria-label="Toggle compact mode"
-      className={
-        // keep your corner position; feel free to swap to another corner
-        "fixed z-40 right-4 top-4 md:right-6 md:top-6 corner-fab " +
-        "grid place-items-center bg-slate-800/90 border border-white/15 " +
-        "backdrop-blur hover:bg-slate-800/80 shadow-lg"
-      }
+      className={"fixed z-40 left-4 bottom-4 md:left-6 md:bottom-6 grid place-items-center w-10 h-10 md:w-11 md:h-11 rounded-full bg-slate-800/90 border border-white/15 backdrop-blur shadow-lg hover:bg-slate-800/80"}
     >
       <span className="sr-only">Compact mode</span>
       {/* simple equal/close glyph */}
