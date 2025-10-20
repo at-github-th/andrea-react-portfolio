@@ -568,3 +568,18 @@ html,body{ margin:0; }
 
 /* hide the orbit diagram only in PROFILE (keep it in SYSTEM MAP) */
 [data-section="profile"] .fx-panel:first-of-type{display:none!important}
+
+/* hide the first big orbit diagram ONLY inside PROFILE; keep SYSTEM MAP */
+[data-section="profile"] svg:first-of-type{display:none!important}
+
+/* force-hide the orbit diagram that appears at top of PROFILE only */
+[data-section="profile"] .fx-panel svg{display:none!important}
+
+/* Fallback: if a large svg remains at top of PROFILE, hide that block */
+[data-section="profile"] .fx-panel svg[data-hidden="true"]{display:none!important}
+
+/* Fallback: if a large svg remains at top of PROFILE, hide that block */
+[data-section="profile"] .fx-panel svg[data-hidden="true"]{display:none!important}
+
+/* hide duplicate orbit ONLY inside PROFILE; keep SYSTEM MAP */
+[data-section="profile"] .system-map{display:none!important}
