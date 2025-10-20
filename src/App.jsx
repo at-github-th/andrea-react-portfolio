@@ -38,14 +38,13 @@ export default function App() {
         <header className="section">
           <Hero />
         </header>
+      <CornerButtons />
       </header>
 
       <main>
         {/* PROFILE expands to show the four donut rows */}
         <CollapsibleSection id="profile" title="PROFILE" defaultOpen={true} data-section="profile">
-<Badges items={["AI/ML","System Architecture","Biomechanics","Fintech","Edge Systems"]} />
-
-          <Profile />
+<Profile />
           <div className="mt-8">
             <Areas />
           </div>
