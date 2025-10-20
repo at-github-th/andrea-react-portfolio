@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { useMode } from "../context/ModeContext";
+import { useMode } from "../context/ModeContext.jsx";
 export default function CompactToggle() {
   const { compact, toggle } = useMode();
   useEffect(() => {
