@@ -23,9 +23,14 @@ import NavOverlay from "./components/NavOverlay.jsx";
 import ContactModal from "./components/ContactModal.jsx";
 import FloatUI from "./components/FloatUI.jsx";
 import CollapsibleSection from "./components/CollapsibleSection.jsx";
-import { ModeProvider } from "./context/ModeContext.jsx";
+import { ModeProvider, useMode } from "./context/ModeContext.jsx";
 import SystemMap from "./components/SystemMap.jsx"; // use inside SYSTEM MAP section
 
+
+function RootFrame({ children }) {
+  const { compact } = useMode();
+  return <div className="min-h-dvh">{children}</div>;
+}
 
 export default function App() {
   const [navOpen, setNavOpen] = useState(false);
