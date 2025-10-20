@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useMode } from "../context/ModeContext.jsx";
+import { useMode } from "../context/ModeContext.jsx".jsx";
 import SkillOrbit from "../components/SkillOrbit.jsx";
 import Palette from "./Palette.jsx";
 
