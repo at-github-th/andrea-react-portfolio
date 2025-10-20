@@ -114,6 +114,9 @@ export default function App() {
         </CollapsibleSection>
       </main>
 
+      {/* Futurist overlay appears when compact is on */}
+      <FuturistLayout />
+
       <FloatUI
         onOpenMenu={() => setNavOpen(true)}
         onOpenContact={() => setContactOpen(true)}
