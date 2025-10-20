@@ -1,10 +1,15 @@
-import React from 'react'
-import { createRoot } from 'react-dom/client'
-import App from './App.jsx'
-import './index.css'
-
-createRoot(document.getElementById('root')).render(
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App.jsx";
+import "./index.css";
+import ModeProvider, { useMode } from "./context/ModeContext.jsx";
+import FuturistToggle from "./components/FuturistToggle.jsx";
+import FuturistLayout from "./futurist/FuturistLayout.jsx";
+function Root(){ const { futurist } = useMode(); return (<>{futurist ? <FuturistLayout/> : <App/>}<FuturistToggle/></>); }
+ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <App />
+    <ModeProvider>
+      <Root />
+    </ModeProvider>
   </React.StrictMode>
-)
+);
