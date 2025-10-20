@@ -28,7 +28,7 @@ export default function FloatUI({ onOpenMenu, onMenu, onOpenContact, onContact }
       <button
         title="Contact"
         onClick={openContact}
-        className="fixed right-3 bottom-3 z-[10000] rounded-full px-3 py-2 border border-teal-400/30 bg-slate-900/70 hover:bg-teal-400/10 backdrop-blur shadow-lg"
+        className="fixed right-3 bottom-3 z-[11000] rounded-full p-2 border border-teal-400/40 bg-slate-900/80 hover:bg-slate-900/70 backdrop-blur shadow-lg"
       >
         <div className="grid place-items-center w-5 h-5"><Mail className="w-5 h-5" /></div>
       </button>
