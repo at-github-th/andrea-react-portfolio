@@ -4,11 +4,10 @@ export default function FuturistToggle(){
   return (
     <button
       onClick={()=>setFuturist(v=>!v)}
-      className={`fixed right-4 top-4 z-50 px-3 py-1 rounded-full border backdrop-blur ${futurist ? "border-cyan-400 text-cyan-300 shadow-neon" : "border-slate-600 text-slate-300"} hover:shadow-neon transition`}
       aria-pressed={futurist}
-      title="Toggle Futurist Mode"
+      className={`fixed right-12 top-6 z-50 px-3 py-1 rounded-full border backdrop-blur ${futurist?"border-cyan-400 text-cyan-300":"border-slate-600 text-slate-300"} hover:shadow-neon transition`}
     >
-      {futurist ? "Futurist: ON" : "Futurist: OFF"}
+      {futurist ? "Compact: ON" : "Compact: OFF"}
     </button>
   );
 }

@@ -1,5 +1,3 @@
-import Badges from "./components/Badges.jsx";
-import SkillOrbit from "./components/SkillOrbit.jsx";
 // src/App.jsx
 import React, { useState } from "react";
 
@@ -35,19 +33,16 @@ export default function App() {
 
       <main>
         {/* PROFILE expands to show the four donut rows */}
-        <CollapsibleSection id="profile" title="PROFILE" defaultOpen={true} data-section="profile">
-  <div className="mb-8"><SkillOrbit /></div>
-  <Badges items={["AI/ML","System Architecture","Biomechanics","Fintech","Edge Systems"]} />
-
+        <CollapsibleSection id="profile" title="PROFILE" defaultOpen={false}>
           <Profile />
           <div className="mt-8">
             <Areas />
           </div>
         </CollapsibleSection>
 
-        <CollapsibleSection id="system-map" title="SYSTEM MAP" defaultOpen={false} data-section="system-map">
-  <SkillOrbit />
-</CollapsibleSection>
+        <CollapsibleSection id="system-map" title="SYSTEM MAP" defaultOpen={false}>
+          <SpatialGrid />
+        </CollapsibleSection>
 
         {/* STATS */}
         <CollapsibleSection id="stats" title="STATS" defaultOpen={false}>
