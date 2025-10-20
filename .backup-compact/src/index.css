@@ -573,13 +573,10 @@ html,body{ margin:0; }
 [data-section="profile"] svg:first-of-type{display:none!important}
 
 /* force-hide the orbit diagram that appears at top of PROFILE only */
-[data-section="profile"] .fx-panel svg{display:none!important}
 
 /* Fallback: if a large svg remains at top of PROFILE, hide that block */
-[data-section="profile"] .fx-panel svg[data-hidden="true"]{display:none!important}
 
 /* Fallback: if a large svg remains at top of PROFILE, hide that block */
-[data-section="profile"] .fx-panel svg[data-hidden="true"]{display:none!important}
 
 /* hide duplicate orbit ONLY inside PROFILE; keep SYSTEM MAP */
 [data-section="profile"] .system-map{display:none!important}
@@ -592,3 +589,7 @@ html,body{ margin:0; }
 
 /* Remove both classic orbits; keep Compact UI only */
 [data-section="profile"] svg, [id="system-map"], [id="system-map"] * { display:none !important; }
+
+/* align corner FAB sizes (menu/home/contact/compact) */
+.fab-44{width:44px!important;height:44px!important}
+#contact, .contact, [data-contact-button]{width:44px;height:44px;border-radius:9999px}
