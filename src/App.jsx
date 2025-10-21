@@ -43,7 +43,9 @@ export default function App() {
         {/* PROFILE expands to show the four donut rows */}
         <CollapsibleSection id="profile" title="PROFILE" defaultOpen={true} data-section="profile">
   <div className="mb-8"><SkillOrbit /></div>
-  <Badges items={["AI/ML","System Architecture","Biomechanics","Fintech","Edge Systems"]} />
+    <div className="hidden" aria-hidden="true">
+      <Badges items={["AI/ML","System Architecture","Biomechanics","Fintech","Edge Systems"]} />
+    </div>
 
           <Profile />
           <div className="mt-8">
