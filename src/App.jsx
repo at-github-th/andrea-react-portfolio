@@ -1,4 +1,3 @@
-import Badges from "./components/Badges.jsx";
 import SkillOrbit from "./components/SkillOrbit.jsx";
 // src/App.jsx
 import React, { useState } from "react";
