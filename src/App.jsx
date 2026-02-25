@@ -2,7 +2,6 @@ import Badges from "./components/Badges.jsx";
 import SkillOrbit from "./components/SkillOrbit.jsx";
 // src/App.jsx
 import React, { useState } from "react";
-import CompactToggle from "./components/CompactToggle.jsx";
 import { useMode } from "./context/ModeContext.jsx";
 
 import Hero from "./components/Hero.jsx";
@@ -31,7 +30,6 @@ export default function App() {
 
   return (
     <div className="min-h-dvh" data-compact={useMode().compact ? "" : undefined}>
-      <CompactToggle />
       {/* HERO */}
       <header className="section">
         <header className="section">
