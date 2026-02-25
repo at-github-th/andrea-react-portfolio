@@ -14,7 +14,8 @@ const PROJECTS = [
     blurb:
       "Python + APIs to ingest seismic data and render live alerts with map clusters & thresholds.",
     tags: ["Python", "Leaflet", "REST", "SQLite"],
-    repo: "https://github.com/andreatempestini/earthquake-alert-dashboard",
+    repo: "https://github.com/at-github-th/earthquake-risk-dashboard",
+    repoPublic: true,
   },
   {
     id: "python-toolkit",
@@ -22,7 +23,7 @@ const PROJECTS = [
     blurb:
       "CLI utilities to parse logs, transform CSVs, and generate quick dashboards for POCs.",
     tags: ["Python", "CLI", "SQLite", "HTML"],
-    repo: "https://github.com/andreatempestini/python-automation-toolkit",
+    repo: "https://github.com/at-github-th/poc-python-automation-gpt-toolkit",
   },
   {
     id: "roller-mw",
@@ -30,14 +31,14 @@ const PROJECTS = [
     blurb:
       "Adapters for catalog/search, pricing, and content ops; purpose-built to unblock presales.",
     tags: ["Node", "SQLite FTS", "Express", "SSR"],
-    repo: "https://github.com/andreatempestini/roller-middleware-pocs",
+    repo: "https://github.com/at-github-th/roller-middleware-pocs",
   },
   {
     id: "aerial-inventory",
     title: "Aerial Inventory Dashboard",
     blurb: "RFID inventory POC with a floor map and live tag scans.",
     tags: ["React", "Vite", "RFID"],
-    repo: "https://github.com/andreatempestini/aerial-inventory-dashboard",
+    repo: "https://github.com/at-github-th/poc-heatmap-aerial-dashboard",
   },
 ];
 

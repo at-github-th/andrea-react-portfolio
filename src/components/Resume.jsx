@@ -1,8 +1,11 @@
 // src/components/Resume.jsx
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 
 export default function Resume() {
   const [open, setOpen] = useState(false);
+
+  const RESUME_URL = useMemo(() => `${import.meta.env.BASE_URL}resume.pdf`, []);
+  const isMobile = typeof window !== "undefined" && window.matchMedia("(max-width: 640px)").matches;
 
   return (
     <section className="section" id="resume">
@@ -11,11 +14,7 @@ export default function Resume() {
         Download my resume for background, projects, and contact details.
       </p>
 
-      <button
-        className="btn"
-        onClick={() => setOpen(true)}
-        aria-label="Open resume preview"
-      >
+      <button className="btn" onClick={() => setOpen(true)} aria-label="Open resume preview">
         View Resume
       </button>
 
@@ -30,31 +29,44 @@ export default function Resume() {
           >
             <div className="flex justify-between items-center mb-4">
               <h3 className="text-lg font-semibold tracking-widest">My Resume</h3>
-              <button
-                className="btn"
-                onClick={() => setOpen(false)}
-                aria-label="Close resume preview"
-              >
+              <button className="btn" onClick={() => setOpen(false)} aria-label="Close resume preview">
                 Close
               </button>
             </div>
 
-            <iframe
-              src="/resume.pdf"
-              title="Resume PDF"
-              className="w-full h-full rounded-lg border border-white/10"
-            ></iframe>
+            {/* Mobile: avoid iframe PDF embed (unreliable). Desktop: embed. */}
+            {isMobile ? (
+              <div className="flex-1 grid place-items-center text-center gap-3">
+                <p className="opacity-80">
+                  Preview works best by opening the PDF directly on mobile.
+                </p>
+                <div className="flex gap-2">
+                  <a className="btn" href={RESUME_URL} target="_blank" rel="noreferrer">
+                    Open
+                  </a>
+                  <a className="btn" href={RESUME_URL} download>
+                    Download PDF
+                  </a>
+                </div>
+              </div>
+            ) : (
+              <iframe
+                src={RESUME_URL}
+                title="Resume PDF"
+                className="w-full flex-1 rounded-lg border border-white/10 bg-transparent"
+              />
+            )}
 
-            <div className="mt-4 flex justify-end">
-              <a
-                href="/resume.pdf"
-                download
-                className="btn"
-                aria-label="Download resume"
-              >
-                Download PDF
-              </a>
-            </div>
+            {!isMobile && (
+              <div className="mt-4 flex justify-end gap-2">
+                <a className="btn" href={RESUME_URL} target="_blank" rel="noreferrer">
+                  Open
+                </a>
+                <a className="btn" href={RESUME_URL} download>
+                  Download PDF
+                </a>
+              </div>
+            )}
           </div>
         </div>
       )}
