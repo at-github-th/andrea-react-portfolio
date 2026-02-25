@@ -21,7 +21,7 @@ const AIPROJECTS = [
 • Visual diagnostics for explainability
     `.trim(),
     tags: ["Python", "ML", "Scikit-Learn", "Realtime"],
-    repo: "https://github.com/andreatempestini/anomaly-detection-demo",
+    repo: "https://github.com/at-github-th/poc-ai-ml-anomaly-detection",
   },
   {
     id: "data-pipelines",
@@ -33,7 +33,7 @@ const AIPROJECTS = [
 • Built for fast search & lightweight BI
     `.trim(),
     tags: ["Node", "SQLite FTS", "ETL", "API"],
-    repo: "https://github.com/andreatempestini/data-pipeline-fts",
+    repo: "https://github.com/at-github-th/poc-data-ingestion-fts",
   },
   {
     id: "robotics-biomech",
@@ -45,7 +45,7 @@ const AIPROJECTS = [
 • System modeling discipline → scalable SaaS & data architectures
     `.trim(),
     tags: ["Robotics", "Biomechanics", "Signal Processing", "Modeling"],
-    repo: "https://github.com/andreatempestini/robotics-biomechanics",
+    repo: "https://github.com/at-github-th/poc-biomechanics-simulations",
   },
 ];
 
