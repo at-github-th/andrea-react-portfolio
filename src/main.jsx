@@ -2,13 +2,12 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App.jsx";
 import "./index.css";
-import * as ModeCtx from "./context/ModeContext";
-const Provider = ModeCtx.ModeProvider || ModeCtx.default || React.Fragment;
+import { ModeProvider } from "./context/ModeContext.jsx";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
-    <Provider>
+    <ModeProvider>
       <App />
-    </Provider>
+    </ModeProvider>
   </React.StrictMode>
 );
