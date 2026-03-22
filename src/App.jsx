@@ -9,7 +9,6 @@ import Profile from "./components/Profile.jsx";
 import Areas from "./components/Areas.jsx";            // ← rendered inside PROFILE
 import Stats from "./components/Stats.jsx";
 import Globe3D from "./components/Globe3D.jsx";
-import WorldMap from "./components/WorldMap.jsx";
 import Projects from "./components/Projects.jsx";
 import OpsGrid from "./components/OpsGrid.jsx";
 import AIML from "./components/AIML.jsx";
@@ -74,13 +73,6 @@ export default function App() {
               <div className="card p-0">
                 <div className="w-full">
                   <Globe3D />
-                </div>
-              </div>
-
-              {/* world map */}
-              <div className="card p-0">
-                <div className="w-full">
-                  <WorldMap />
                 </div>
               </div>
             </div>
