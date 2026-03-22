@@ -44,7 +44,7 @@ function CountryModal({ open, country, items, onClose, onSelect }) {
   }, [open, onClose]);
   if (!open) return null;
   return (
-    <div className="modal-wrap" onClick={onClose}>
+    <div className="modal-wrap" style={{ position: "fixed", inset: 0, zIndex: 60 }} onClick={onClose}>
       <div className="modal-card" onClick={(e)=>e.stopPropagation()}>
         <div className="modal-head">
           <strong>{country}</strong>
@@ -69,7 +69,7 @@ function AccountSheet({ open, account, onClose }) {
   useEffect(()=>{ setTab("overview"); }, [account]);
   if (!open || !account) return null;
   return (
-    <div className="modal-wrap" onClick={onClose}>
+    <div className="modal-wrap" style={{ position: "fixed", inset: 0, zIndex: 60 }} onClick={onClose}>
       <div className="modal-card wide" onClick={(e)=>e.stopPropagation()}>
         <div className="modal-head">
           <div className="row"><strong>{account.name}</strong><Badge status={account.status}/></div>
@@ -153,39 +153,79 @@ function Starfield() {
   },[]);
   return (<points geometry={stars}><pointsMaterial size={0.14} sizeAttenuation/></points>);
 }
-function Pulse({ radius=0.02 }){
-  // Light “breathing” via rAF on a local ref (no useFrame)
+function Pulse({ radius = 0.02, paused = false }) {
   const ref = useRef();
+
   useEffect(() => {
+    if (paused) return;
+
     let raf = 0;
     const start = performance.now();
     const tick = (now) => {
       const t = (now - start) / 1000;
-      const s = 1 + Math.sin(t*3) * 0.25;
+      const s = 1 + Math.sin(t * 3) * 0.25;
       if (ref.current) ref.current.scale.setScalar(s);
       raf = requestAnimationFrame(tick);
     };
+
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, []);
-  return (<mesh ref={ref}><sphereGeometry args={[radius,16,16]} /><meshStandardMaterial emissiveIntensity={1} emissive="white" transparent opacity={0.85}/></mesh>);
+  }, [paused]);
+
+  return (
+    <mesh ref={ref}>
+      <sphereGeometry args={[radius, 16, 16]} />
+      <meshStandardMaterial
+        emissiveIntensity={1}
+        emissive="white"
+        transparent
+        opacity={0.85}
+      />
+    </mesh>
+  );
 }
-function Pins({ data, onPick }) {
-  const items = useMemo(()=>data.map((a,i)=>({ ...a, pos: toCartesian(a.lat, a.lon, 1.02), key: `${a.name}-${i}` })),[data]);
-  const handleClick = useCallback((item,e)=>{ e.stopPropagation(); onPick(item); },[onPick]);
+function Pins({ data, onPick, modalActive = false }) {
+  const items = useMemo(
+    () =>
+      data.map((a, i) => ({
+        ...a,
+        pos: toCartesian(a.lat, a.lon, 1.02),
+        key: `${a.name}-${i}`,
+      })),
+    [data]
+  );
+
+  const handleClick = useCallback(
+    (item, e) => {
+      e.stopPropagation();
+      onPick(item);
+    },
+    [onPick]
+  );
+
   return (
     <group>
-      {items.map(item=>(
+      {items.map((item) => (
         <group position={item.pos} key={item.key}>
-          <mesh onClick={(e)=>handleClick(item,e)}>
-            <sphereGeometry args={[0.018,16,16]}/>
+          <mesh onClick={(e) => handleClick(item, e)}>
+            <sphereGeometry args={[0.018, 16, 16]} />
             <meshStandardMaterial
-              color={ item.status==="active" ? "#34d399" : item.status==="pilot" ? "#60a5fa" : item.status==="poc" ? "#f59e0b" : "#a3a3a3" }
-              roughness={0.5} metalness={0.2} emissiveIntensity={0.5}
-              emissive={ item.status==="active" ? "#0ea5e9" : "#000000" }
+              color={
+                item.status === "active"
+                  ? "#34d399"
+                  : item.status === "pilot"
+                  ? "#60a5fa"
+                  : item.status === "poc"
+                  ? "#f59e0b"
+                  : "#a3a3a3"
+              }
+              roughness={0.5}
+              metalness={0.2}
+              emissiveIntensity={0.5}
+              emissive={item.status === "active" ? "#0ea5e9" : "#000000"}
             />
           </mesh>
-          <Pulse radius={0.012}/>
+          <Pulse radius={0.012} paused={modalActive} />
         </group>
       ))}
     </group>
@@ -198,6 +238,7 @@ export default function Globe3D() {
   const [controlsEnabled, setControlsEnabled] = useState(true);
   const [countryOpen, setCountryOpen] = useState(null);
   const [accountOpen, setAccountOpen] = useState(null);
+  const modalActive = !!countryOpen || !!accountOpen;
   const [query, setQuery] = useState("");
   const [statusFilter, setStatusFilter] = useState("all");
 
@@ -268,6 +309,11 @@ export default function Globe3D() {
   }, [focusOfCountry, focusTo]);
 
   useEffect(()=>{ if (!countryOpen && !accountOpen) setControlsEnabled(true); }, [countryOpen, accountOpen]);
+  useEffect(() => {
+  if (!modalActive) return;
+  if (tweenRef.current?.raf) cancelAnimationFrame(tweenRef.current.raf);
+  tweenRef.current = null;
+}, [modalActive]);
   useEffect(()=>() => { if (tweenRef.current) cancelAnimationFrame(tweenRef.current.raf); }, []);
 
   const lights = (
@@ -284,7 +330,7 @@ export default function Globe3D() {
   );
 
   return (
-    <div className={`globe-card ${!controlsEnabled ? "modal-open" : ""}`}>
+    <div className={`globe-card ${modalActive ? "modal-open" : ""}`}>
       {/* toolbar */}
       <div className="globe-toolbar">
         <input
@@ -311,40 +357,29 @@ export default function Globe3D() {
       </div>
 
       {/* globe */}
-      <Canvas
-        camera={{ position: [0, 0, isMobile ? 3.8 : 3.2], fov: isMobile ? 47 : 45 }}
-        gl={{ outputColorSpace: THREE.SRGBColorSpace }}
-        dpr={[1, 2]}
-      >
-        <Starfield />
-        {lights}
-        <Atmosphere />
-        <GlobeCore />
-        <GridLines />
-        <Pins data={filteredAccounts} onPick={onPinPick} />
-        <OrbitControls
-          ref={controlsRef}
-          enablePan={false}
-          enableZoom={false}
-          enableRotate={controlsEnabled}
-          autoRotate={controlsEnabled}
-          autoRotateSpeed={0.5}
-          dampingFactor={0.08}
-        />
-      </Canvas>
-
-      {/* country pills row */}
-      <div className="globe-pills">
-        {countryPills.map(cp=>(
-          <button
-            key={cp.name}
-            className="pill pill-btn"
-            onClick={()=>handleCountrySelect(cp.name)}
-            aria-pressed={countryOpen === cp.name ? "true" : "false"}
-          >
-            {cp.name} <span className="pill-count">{cp.count}</span>
-          </button>
-        ))}
+      <div style={{ pointerEvents: modalActive ? "none" : "auto" }}>
+        <Canvas
+          frameloop={modalActive ? "never" : "always"}
+          camera={{ position: [0, 0, isMobile ? 3.8 : 3.2], fov: isMobile ? 47 : 45 }}
+          gl={{ outputColorSpace: THREE.SRGBColorSpace }}
+          dpr={modalActive ? 1 : [1, 2]}
+        >
+          <Starfield />
+          {lights}
+          <Atmosphere />
+          <GlobeCore />
+          <GridLines />
+          <Pins data={filteredAccounts} onPick={onPinPick} modalActive={modalActive} />
+          <OrbitControls
+            ref={controlsRef}
+            enablePan={false}
+            enableZoom={false}
+            enableRotate={controlsEnabled}
+            autoRotate={controlsEnabled}
+            autoRotateSpeed={0.5}
+            dampingFactor={0.08}
+          />
+        </Canvas>
       </div>
 
       {/* modals */}
@@ -353,7 +388,10 @@ export default function Globe3D() {
         country={countryOpen || ""}
         items={countryOpen ? (byCountry.get(countryOpen) || []).filter(a => filteredAccounts.includes(a)) : []}
         onClose={()=>{ setCountryOpen(null); setControlsEnabled(true); }}
-        onSelect={(a)=>{ setAccountOpen(a); }}
+        onSelect={(a)=>{
+          setCountryOpen(null);
+          setAccountOpen(a);
+        }}
       />
       <AccountSheet open={!!accountOpen} account={accountOpen} onClose={()=>setAccountOpen(null)} />
     </div>
