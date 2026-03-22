@@ -19,7 +19,7 @@ const PROJECTS = [
   },
   {
     id: "python-toolkit",
-    title: "Python Automation Toolkit (GPT-assisted)",
+    title: "Python Automation Toolkit",
     blurb:
       "CLI utilities to parse logs, transform CSVs, and generate quick dashboards for POCs.",
     tags: ["Python", "CLI", "SQLite", "HTML"],
